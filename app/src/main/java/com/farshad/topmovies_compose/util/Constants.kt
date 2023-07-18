@@ -1,4 +1,4 @@
-package com.farshad.topmovies_compose.ui
+package com.farshad.topmovies_compose.util
 
 object Constants {
 

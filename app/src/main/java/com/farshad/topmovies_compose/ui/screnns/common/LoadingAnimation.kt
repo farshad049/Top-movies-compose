@@ -26,7 +26,7 @@ fun LoadingAnimation(
     travelDistance: Dp = 20.dp
 ) {
     Box(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         val circles = listOf(

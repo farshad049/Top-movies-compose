@@ -1,5 +1,6 @@
 package com.farshad.topmovies_compose.ui.screnns.common
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,8 +12,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Icon
@@ -26,12 +31,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImage
@@ -43,6 +50,7 @@ import com.farshad.topmovies_compose.ui.theme.myYellow
 import com.farshad.topmovies_compose.util.Convertors
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
 import com.farshad.topmovies_compose.util.sampleMovie1
+import com.valentinilk.shimmer.shimmer
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -53,6 +61,18 @@ fun MovieHorizontalLazyColumn(
     onRowClick: (Int)-> Unit,
 ){
     val listForRow by remember { mutableStateOf(movieList) }
+
+    if (listForRow.loadState.refresh is LoadState.NotLoading &&
+        listForRow.loadState.append.endOfPaginationReached &&
+        listForRow.itemCount < 1
+    ){
+        Log.e("no data","no data")
+    }
+
+    if (listForRow.loadState.refresh is LoadState.Loading){
+        MovieHorizontalItemShimmerLst()
+    }
+
 
     LazyColumn(
         modifier = modifier,
@@ -176,9 +196,78 @@ fun MovieHorizontalItem(
         }
 
     }
-
 }
 
+
+@DarkAndLightPreview
+@Composable
+fun MovieHorizontalItemShimmerLst(
+    modifier: Modifier= Modifier
+){
+    Column() {
+        repeat(8){
+            MovieHorizontalItemShimmer(modifier = modifier)
+        }
+    }
+}
+
+@Composable
+fun MovieHorizontalItemShimmer(
+    modifier: Modifier= Modifier
+){
+    val backGroundColor= Color.LightGray.copy(alpha = 0.9f)
+
+    Box(
+        modifier = modifier
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .fillMaxWidth()
+            .height(90.dp)
+            .shadow(
+                elevation = 3.dp,
+                spotColor = MaterialTheme.colorScheme.onBackground,
+                shape = MaterialTheme.shapes.medium
+            )
+            .background(
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colorScheme.background
+            )
+            .clip(shape = MaterialTheme.shapes.medium)
+    ){
+        Row(
+            modifier = modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(CircleShape)
+                    .shimmer()
+                    .background(backGroundColor)
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Column(verticalArrangement = Arrangement.Center) {
+                Spacer(
+                    modifier = Modifier
+                        .height(20.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .fillMaxWidth(fraction = 0.7f)
+                        .shimmer()
+                        .background(backGroundColor)
+                )
+                Spacer(modifier = Modifier.padding(5.dp))
+                Spacer(
+                    modifier = Modifier
+                        .height(20.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .fillMaxWidth(fraction = 0.9f)
+                        .shimmer()
+                        .background(backGroundColor)
+                )
+            }
+        }
+    }
+}
 
 
 

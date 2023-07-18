@@ -7,7 +7,7 @@ import com.farshad.topmovies_compose.data.Authentication.AuthAuthenticator
 import com.farshad.moviesAppCompose.Authentication.AuthInterceptor
 import com.farshad.topmovies_compose.data.remote.ApiClient
 import com.farshad.topmovies_compose.data.remote.MovieService
-import com.farshad.topmovies_compose.ui.Constants.BASE_URL
+import com.farshad.topmovies_compose.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

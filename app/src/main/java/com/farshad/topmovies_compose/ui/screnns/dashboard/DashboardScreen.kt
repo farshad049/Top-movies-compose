@@ -18,9 +18,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 
 import com.farshad.moviesAppCompose.data.model.ui.Resource
 import com.farshad.topmovies_compose.R
+import com.farshad.topmovies_compose.navigation.Screens
+import com.farshad.topmovies_compose.navigation.SharedViewModel
 import com.farshad.topmovies_compose.ui.screnns.common.HeaderWithViewAll
 
 import com.farshad.topmovies_compose.ui.screnns.dashboard.model.DashboardUiModel
@@ -96,17 +99,23 @@ fun DashboardScreen(
 
 @Composable
 fun DashboardScreenWithViewModel(
+    navController: NavHostController,
     dashboardViewModel: DashboardViewModel = hiltViewModel(),
-    dashboardOnClicks: DashboardOnClicks
+    sharedViewModel: SharedViewModel,
 ) {
+    val dashboardOnClicks= DashboardOnClicks(navController)
+
     val data by dashboardViewModel.combinedData.collectAsStateWithLifecycle(initialValue = Resource.Loading)
 
     when (data) {
         is Resource.Success -> {
             DashboardScreen(
                 movieAndGenre = (data as Resource.Success<DashboardUiModel>).data,
-                onImageClick = {},
-                onGenreClick = {}
+                onImageClick = {dashboardOnClicks.onMovieClick(it)},
+                onGenreClick = {genreId->
+                    sharedViewModel.updateSelectedGenreId(genreId)
+                    dashboardOnClicks.onGenreClick()
+                }
             )
         }
 

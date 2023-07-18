@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.farshad.topmovies_compose.data.db.Dao.FavoriteMovieDao
 import com.farshad.topmovies_compose.data.db.Dao.MovieSearchHistoryDao
 import com.farshad.topmovies_compose.data.db.MovieDatabase
-import com.farshad.topmovies_compose.ui.Constants.DATABASE_NAME
+import com.farshad.topmovies_compose.util.Constants.DATABASE_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

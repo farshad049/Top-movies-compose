@@ -1,16 +1,15 @@
 package com.farshad.topmovies_compose.ui.screnns.dashboard
 
-import androidx.navigation.NavController
 
-class DashboardOnClicks(private val navController: NavController) {
+import androidx.navigation.NavHostController
+import com.farshad.topmovies_compose.navigation.Screens
 
-//    fun onGenreClick(genreId: Int){
-//        val directions= DashboardFragmentDirections.actionDashboardFragmentToMovieListByGenre(genreId)
-//        navController.navigate(directions)
-//    }
-//
-//    fun onMovieClick(movieId:Int){
-//        val directions= NavGraphDirections.actionGlobalToMovieDetailFragment(movieId)
-//        navController.navigate(directions)
-//    }
+class DashboardOnClicks(private val navController: NavHostController) {
+    fun onGenreClick(){
+        navController.navigate(Screens.MovieByGenre.route)
+    }
+
+    fun onMovieClick(movieId:Int){
+        navController.navigate(Screens.Detail.passMovieID(movieId))
+    }
 }

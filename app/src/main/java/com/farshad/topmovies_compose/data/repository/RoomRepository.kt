@@ -1,4 +1,4 @@
-package com.farshad.topmovies_compose.data.db
+package com.farshad.topmovies_compose.data.repository
 
 import com.farshad.topmovies_compose.data.db.Dao.FavoriteMovieDao
 import com.farshad.topmovies_compose.data.db.Dao.MovieSearchHistoryDao

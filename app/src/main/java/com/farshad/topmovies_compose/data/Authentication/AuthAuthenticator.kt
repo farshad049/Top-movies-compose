@@ -2,7 +2,7 @@ package com.farshad.topmovies_compose.data.Authentication
 
 import com.farshad.moviesAppCompose.data.model.network.UserAuthModel
 import com.farshad.moviesAppCompose.data.remote.AuthService
-import com.farshad.topmovies_compose.ui.Constants.BASE_URL
+import com.farshad.topmovies_compose.util.Constants.BASE_URL
 import kotlinx.coroutines.runBlocking
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
