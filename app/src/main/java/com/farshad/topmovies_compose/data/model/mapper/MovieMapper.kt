@@ -1,6 +1,6 @@
-package com.farshad.moviesAppCompose.data.model.mapper
+package com.farshad.topmovies_compose.data.model.mapper
 
-import com.farshad.moviesAppCompose.data.model.domain.DomainMovieModel
+import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.moviesAppCompose.data.model.network.NetworkMovieModel
 import javax.inject.Inject
 
@@ -20,7 +20,12 @@ class MovieMapper @Inject constructor() {
             rated=networkMovieModel?.rated ?:"",
             title=networkMovieModel?.title ?:"",
             year=networkMovieModel?.year ?:"",
-            runTime = networkMovieModel?.runtime ?:""
+            runTime = networkMovieModel?.runtime ?:"",
+            imdb_votes = networkMovieModel?.imdb_votes ?:"",
+            metaScore = networkMovieModel?.metascore ?:"",
+            writer = networkMovieModel?.writer ?:"",
+            awards = networkMovieModel?.awards ?: "",
+            released = networkMovieModel?.released ?: ""
         )
     }
 

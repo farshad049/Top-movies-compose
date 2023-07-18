@@ -12,14 +12,14 @@
     <string name="please_login">لطفا وارد شوید</string>
     <string name="top_rated_movies">فیلم های برتر</string>
     <string name="nothing_found">چیزی پیدا نشد !</string>
-    <string name="imdb">امتیاز:</string>
-    <string name="year">سال:</string>
-    <string name="rated">رده:</string>
-    <string name="country">کشور:</string>
-    <string name="genres">ژانر:</string>
-    <string name="director">کاگردان:</string>
+    <string name="imdb">امتیاز</string>
+    <string name="year">سال</string>
+    <string name="rated">رده</string>
+    <string name="country">کشور</string>
+    <string name="genres">ژانر</string>
+    <string name="director">کاگردان</string>
     <string name="actors">بازیگران:</string>
-    <string name="plot">خلاصه:</string>
+    <string name="plot">خلاصه</string>
     <string name="username">نام کاربری</string>
     <string name="forget_password">فراموشی کلمه عبور</string>
     <string name="don_t_have_an_account">حساب ندارید؟</string>
@@ -74,4 +74,8 @@
     <string name="View_all">نمایش همه</string>
     <string name="categories">دسته بندی ها</string>
     <string name="latest_movies">آخرین فیلم ها</string>
+    <string name="released_date">روز انتشار</string>
+    <string name="writer">نویسنده</string>
+    <string name="awards">جایزه ها</string>
+
 </resources>

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.farshad.moviesAppCompose.data.model.mapper.MovieMapper
+import com.farshad.topmovies_compose.data.model.mapper.MovieMapper
 import com.farshad.moviesAppCompose.data.model.network.GenresModel
 import com.farshad.moviesAppCompose.data.model.ui.Resource
 import com.farshad.topmovies_compose.data.remote.ApiClient

@@ -2,7 +2,7 @@ package com.farshad.topmovies_compose.ui.screnns.movieDetail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.farshad.moviesAppCompose.data.model.domain.DomainMovieModel
+import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.moviesAppCompose.data.model.ui.Resource
 import com.farshad.moviesAppCompose.data.repository.MovieDetailRepository
 import com.farshad.topmovies_compose.data.db.Entity.FavoriteMovieEntity

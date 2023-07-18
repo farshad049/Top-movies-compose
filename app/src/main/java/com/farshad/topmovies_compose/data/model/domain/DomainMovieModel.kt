@@ -1,4 +1,4 @@
-package com.farshad.moviesAppCompose.data.model.domain
+package com.farshad.topmovies_compose.data.model.domain
 
 data class DomainMovieModel(
 val actors: String = "",
@@ -13,6 +13,11 @@ val poster: String = "",
 val rated: String = "",
 val title: String = "",
 val year: String = "",
-val runTime: String = ""
+val runTime: String = "",
+val imdb_votes: String= "",
+val released: String= "",
+val writer: String= "",
+val awards: String ="",
+val metaScore: String= ""
 )
 

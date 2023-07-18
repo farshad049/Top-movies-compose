@@ -43,7 +43,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.farshad.moviesAppCompose.data.model.domain.DomainMovieModel
+import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.topmovies_compose.R
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import com.farshad.topmovies_compose.ui.theme.myYellow
@@ -70,7 +70,7 @@ fun MovieHorizontalLazyColumn(
     }
 
     if (listForRow.loadState.refresh is LoadState.Loading){
-        MovieHorizontalItemShimmerLst()
+        MovieHorizontalItemShimmerList()
     }
 
 
@@ -201,7 +201,7 @@ fun MovieHorizontalItem(
 
 @DarkAndLightPreview
 @Composable
-fun MovieHorizontalItemShimmerLst(
+fun MovieHorizontalItemShimmerList(
     modifier: Modifier= Modifier
 ){
     Column() {

@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.farshad.moviesAppCompose.data.model.domain.DomainMovieModel
+import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.topmovies_compose.ui.screnns.dashboard.model.DashboardUiModel
 import com.farshad.topmovies_compose.ui.screnns.common.ImageWithGradient
 import com.farshad.topmovies_compose.ui.theme.AppTheme

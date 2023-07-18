@@ -1,6 +1,5 @@
 package com.farshad.topmovies_compose.ui.screnns.movieListByGenre
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,7 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.farshad.moviesAppCompose.data.model.domain.DomainMovieModel
+import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.moviesAppCompose.data.model.ui.Resource
 import com.farshad.topmovies_compose.navigation.SharedViewModel
 import com.farshad.topmovies_compose.ui.screnns.common.LoadingAnimation

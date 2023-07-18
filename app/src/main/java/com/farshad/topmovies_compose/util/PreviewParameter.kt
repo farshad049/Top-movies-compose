@@ -1,7 +1,7 @@
 package com.farshad.topmovies_compose.util
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.farshad.moviesAppCompose.data.model.domain.DomainMovieModel
+import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.moviesAppCompose.data.model.network.GenresModel
 import com.farshad.topmovies_compose.ui.screnns.dashboard.model.DashboardUiModel
 
@@ -55,20 +55,30 @@ val sampleMovieList = listOf(
     )
 )
 val sampleMovie1 = DomainMovieModel(
-    actors = "farshad",
-    country = "Iran",
-    director = "Alex",
+
     genres = listOf("comedy", "action", "dram"),
+    images = listOf("http://moviesapi.ir/images/tt0111161_screenshot1.jpg",
+        "http://moviesapi.ir/images/tt0111161_screenshot2.jpg",
+        "http://moviesapi.ir/images/tt0111161_screenshot3.jpg"),
     id = 1,
-    images = listOf("as", "asd", "awe", "art"),
-    imdb_rating = "8.3",
-    plot = "Let's talk about combining two flows into one. There are a few ways to do this. The simplest involves merging the elements from two flows into one",
-    poster = "rty",
+    title = "The Shawshank Redemption",
+    poster = "https://moviesapi.ir/images/tt0111161_poster.jpg",
+    year = "1994",
     rated = "R",
-    title = "movie title",
-    year = "1996",
-    runTime = "142 min"
-)
+    released = "14 Oct 1994",
+    runTime = "142 min",
+    director = "Frank Darabont",
+    writer = "Stephen King (short story \"Rita Hayworth and Shawshank Redemption\"), Frank Darabont (screenplay)",
+    actors = "Tim Robbins, Morgan Freeman, Bob Gunton, William Sadler",
+    plot = "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
+    country = "USA",
+    awards = "Nominated for 7 Oscars. Another 19 wins &amp; 30 nominations.",
+    metaScore = "80",
+    imdb_rating = "9.3",
+    imdb_votes = "1,738,596",
+
+
+    )
 val sampleMovie2 = DomainMovieModel(
     actors = "farshad1",
     country = "Iran1",
@@ -110,7 +120,6 @@ val sampleGenreList = listOf(
     GenresModel(6, "dram"),
     GenresModel(7, "dram"),
 )
-
 
 
 class SampleGenresModel : PreviewParameterProvider<List<GenresModel>> {

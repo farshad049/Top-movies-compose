@@ -1,7 +1,7 @@
 package com.farshad.topmovies_compose.ui.screnns.dashboard
 
 import androidx.lifecycle.*
-import com.farshad.moviesAppCompose.data.model.domain.DomainMovieModel
+import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.moviesAppCompose.data.model.network.GenresModel
 import com.farshad.moviesAppCompose.data.model.ui.Resource
 import com.farshad.moviesAppCompose.data.repository.DashboardRepository
