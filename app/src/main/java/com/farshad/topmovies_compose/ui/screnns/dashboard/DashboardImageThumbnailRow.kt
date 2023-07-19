@@ -33,6 +33,7 @@ fun DashboardImageThumbnailRow(
     onClick: (Int) -> Unit
 ){
 
+    //set the initial state of list to the middle of screen
     val widthOfScreen= LocalConfiguration.current.screenHeightDp / 2
     val listState = rememberLazyListState(initialFirstVisibleItemScrollOffset = widthOfScreen)
 

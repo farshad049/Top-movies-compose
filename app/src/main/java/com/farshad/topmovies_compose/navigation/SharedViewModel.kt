@@ -15,7 +15,7 @@ import javax.inject.Inject
 class SharedViewModel @Inject constructor(
 ) : ViewModel() {
 
-    var genreId by mutableStateOf<Int?>(null)
+    var genreId by mutableStateOf<Int>(1)
         private set
 
 

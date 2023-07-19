@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.farshad.topmovies_compose.navigation.MainScreen
 import com.farshad.topmovies_compose.navigation.SetupNavGraph
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,8 +19,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppTheme() {
                 navHostController= rememberNavController()
-                SetupNavGraph(navController = navHostController)
-
+                MainScreen(navHostController = navHostController)
             }
         }
     }

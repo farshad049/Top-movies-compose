@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -60,6 +61,7 @@ fun MovieHorizontalLazyColumn(
     movieList: LazyPagingItems<DomainMovieModel>,
     onRowClick: (Int)-> Unit,
 ){
+    val listState= rememberLazyListState()
     val listForRow by remember { mutableStateOf(movieList) }
 
     if (listForRow.loadState.refresh is LoadState.NotLoading &&
@@ -77,6 +79,7 @@ fun MovieHorizontalLazyColumn(
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(10.dp),
+        state = listState
     ){
         items(
             items = listForRow, key = {it.id}

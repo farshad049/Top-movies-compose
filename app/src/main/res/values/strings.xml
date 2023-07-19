@@ -18,7 +18,7 @@
     <string name="genres">Genres</string>
     <string name="director">Director</string>
     <string name="actors">Actors</string>
-    <string name="plot">Plot:</string>
+    <string name="plot">Plot</string>
     <string name="username">username</string>
     <string name="forget_password">forget password</string>
     <string name="don_t_have_an_account">don\'t have an account?</string>
@@ -76,6 +76,7 @@
     <string name="released_date">released date</string>
     <string name="writer">writer</string>
     <string name="awards">Awards</string>
+    <string name="similar_movies">Similar movies</string>
 
 
 </resources>

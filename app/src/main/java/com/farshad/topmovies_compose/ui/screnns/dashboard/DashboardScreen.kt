@@ -19,18 +19,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-
 import com.farshad.moviesAppCompose.data.model.ui.Resource
 import com.farshad.topmovies_compose.R
-import com.farshad.topmovies_compose.navigation.Screens
 import com.farshad.topmovies_compose.navigation.SharedViewModel
 import com.farshad.topmovies_compose.ui.screnns.common.HeaderWithViewAll
-
-import com.farshad.topmovies_compose.ui.screnns.dashboard.model.DashboardUiModel
-
 import com.farshad.topmovies_compose.ui.screnns.common.ImageThumbnailRow
 import com.farshad.topmovies_compose.ui.screnns.common.LoadingAnimation
 import com.farshad.topmovies_compose.ui.screnns.common.SuggestionChipLazyRow
+import com.farshad.topmovies_compose.ui.screnns.dashboard.model.DashboardUiModel
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
 import com.farshad.topmovies_compose.util.sampleGenreList
@@ -42,6 +38,8 @@ fun DashboardScreen(
     movieAndGenre: DashboardUiModel,
     onImageClick: (Int) -> Unit,
     onGenreClick: (Int) -> Unit,
+    onViewAllGenreClick: () -> Unit,
+    onViewAllMovieClick : ()-> Unit
 ) {
     Box(
         modifier = Modifier
@@ -68,7 +66,7 @@ fun DashboardScreen(
             HeaderWithViewAll(
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
                 title = stringResource(id = R.string.categories),
-                onViewAllClick = {}
+                onViewAllClick = onViewAllGenreClick
             )
 
             SuggestionChipLazyRow(
@@ -82,14 +80,14 @@ fun DashboardScreen(
             HeaderWithViewAll(
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
                 title = stringResource(id = R.string.top_rated_movies),
-                onViewAllClick = {}
+                onViewAllClick = onViewAllMovieClick
             )
 
             Spacer(modifier = Modifier.height(4.dp))
 
             ImageThumbnailRow(
                 movies = movieAndGenre.movie,
-                onClick = {}
+                onClick = onImageClick
             )
 
         }
@@ -115,7 +113,9 @@ fun DashboardScreenWithViewModel(
                 onGenreClick = {genreId->
                     sharedViewModel.updateSelectedGenreId(genreId)
                     dashboardOnClicks.onGenreClick()
-                }
+                },
+                onViewAllGenreClick = {dashboardOnClicks.onGenreClick()},
+                onViewAllMovieClick = {dashboardOnClicks.onViewAllMovieClick()}
             )
         }
 
@@ -140,7 +140,9 @@ private fun Preview(
                 randomMovies = sampleMovieList
             ),
             onImageClick = {},
-            onGenreClick = {}
+            onGenreClick = {},
+            onViewAllGenreClick = {},
+            onViewAllMovieClick = {}
         )
     }
 }

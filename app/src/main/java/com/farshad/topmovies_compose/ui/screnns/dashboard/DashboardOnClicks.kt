@@ -12,4 +12,8 @@ class DashboardOnClicks(private val navController: NavHostController) {
     fun onMovieClick(movieId:Int){
         navController.navigate(Screens.Detail.passMovieID(movieId))
     }
+
+    fun onViewAllMovieClick(){
+        navController.navigate(Screens.MovieList.route)
+    }
 }

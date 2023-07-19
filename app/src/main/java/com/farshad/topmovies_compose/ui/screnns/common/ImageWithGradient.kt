@@ -41,37 +41,38 @@ fun ImageWithGradient(
 ){
     Box(modifier = modifier
         .width(width)
-        .height(height)
-        .border(
-            width = 1.dp,
-            shape = MaterialTheme.shapes.medium,
-            color = MaterialTheme.colorScheme.primary
-        )
-        .shadow(
-            elevation = 6.dp, spotColor = MaterialTheme.colorScheme.onBackground,
-            shape = MaterialTheme.shapes.medium
-        )
-        .background(
-            shape = MaterialTheme.shapes.medium,
-            color = MaterialTheme.colorScheme.outline
-        )
-        .clip(MaterialTheme.shapes.medium)
-        .drawWithCache {
-            val gradient = Brush.verticalGradient(
-                colors = listOf(Color.Transparent, Color.Black),
-                startY = size.height / 3,
-                endY = size.height
-            )
-            onDrawWithContent {
-                drawContent()
-                drawRect(gradient, blendMode = BlendMode.Multiply)
-            }
-        }
-        .clickable { onClick(movieId) },
+        .height(height),
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .border(
+                    width = 1.dp,
+                    shape = MaterialTheme.shapes.medium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                .shadow(
+                    elevation = 6.dp, spotColor = MaterialTheme.colorScheme.onBackground,
+                    shape = MaterialTheme.shapes.medium
+                )
+                .background(
+                    shape = MaterialTheme.shapes.medium,
+                    color = MaterialTheme.colorScheme.outline
+                )
+                .clip(MaterialTheme.shapes.medium)
+                .drawWithCache {
+                    val gradient = Brush.verticalGradient(
+                        colors = listOf(Color.Transparent, Color.Black),
+                        startY = size.height / 3,
+                        endY = size.height
+                    )
+                    onDrawWithContent {
+                        drawContent()
+                        drawRect(gradient, blendMode = BlendMode.Multiply)
+                    }
+                }
+                .clickable { onClick(movieId) },
             model = ImageRequest.Builder(LocalContext.current)
                 .data(imageUrl)
                 .crossfade(500)

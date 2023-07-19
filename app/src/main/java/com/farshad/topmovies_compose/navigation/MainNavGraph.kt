@@ -26,6 +26,8 @@ fun SetupNavGraph(
 
         dashboardNavGraph(navController = navController,sharedViewModel)
 
+        movieListNavGraph(navController= navController, sharedViewModel)
+
 
         composable(
             route = Screens.Detail.route,

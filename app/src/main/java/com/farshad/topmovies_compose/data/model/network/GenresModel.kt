@@ -1,4 +1,4 @@
-package com.farshad.moviesAppCompose.data.model.network
+package com.farshad.topmovies_compose.data.model.network
 
 data class GenresModel(
     val id: Int = 0,

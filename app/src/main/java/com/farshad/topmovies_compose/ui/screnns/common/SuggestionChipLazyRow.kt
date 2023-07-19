@@ -3,7 +3,7 @@ package com.farshad.topmovies_compose.ui.screnns.common
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ChipElevation
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
@@ -11,16 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
-import com.farshad.moviesAppCompose.data.model.network.GenresModel
+import com.farshad.topmovies_compose.data.model.network.GenresModel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
 import com.farshad.topmovies_compose.util.sampleGenreList
@@ -33,10 +28,12 @@ fun SuggestionChipLazyRow(
     onClick: (Int)-> Unit
 ){
     val listForRow by remember { mutableStateOf(list) }
+    val listState= rememberLazyListState()
 
     LazyRow(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        state = listState
     ){
        items(
            items = listForRow, key = {it.hashCode()}

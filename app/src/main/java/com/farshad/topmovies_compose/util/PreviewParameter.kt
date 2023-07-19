@@ -2,7 +2,7 @@ package com.farshad.topmovies_compose.util
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
-import com.farshad.moviesAppCompose.data.model.network.GenresModel
+import com.farshad.topmovies_compose.data.model.network.GenresModel
 import com.farshad.topmovies_compose.ui.screnns.dashboard.model.DashboardUiModel
 
 

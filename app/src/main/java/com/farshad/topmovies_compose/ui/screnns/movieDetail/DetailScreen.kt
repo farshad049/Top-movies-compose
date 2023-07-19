@@ -1,9 +1,7 @@
 package com.farshad.topmovies_compose.ui.screnns.movieDetail
 
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,10 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
@@ -44,7 +41,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -53,8 +49,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.farshad.moviesAppCompose.data.model.ui.Resource
 import com.farshad.topmovies_compose.R
+import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
+import com.farshad.topmovies_compose.ui.screnns.common.ImageThumbnailRow
 import com.farshad.topmovies_compose.ui.screnns.common.LoadingAnimation
-import com.farshad.topmovies_compose.ui.screnns.common.MovieHorizontalItemShimmerList
 import com.farshad.topmovies_compose.ui.screnns.movieDetail.model.UiMovieDetailModel
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import com.farshad.topmovies_compose.ui.theme.myRed
@@ -62,6 +59,10 @@ import com.farshad.topmovies_compose.ui.theme.myYellow
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
 import com.farshad.topmovies_compose.util.sampleMovie1
 import com.farshad.topmovies_compose.util.sampleMovieList
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.HorizontalPagerIndicator
+import com.google.accompanist.pager.rememberPagerState
 
 @Composable
 fun DetailScreenWithViewModel(
@@ -69,13 +70,19 @@ fun DetailScreenWithViewModel(
     detailViewModel: MovieDetailViewModel = hiltViewModel(),
     arg: Int?
 ) {
+    val detailScreenOnClicks= DetailScreenOnClicks(navController = navController)
     arg?.let { detailViewModel.getMovieById(arg) }
 
     val data by detailViewModel.combinedData.collectAsStateWithLifecycle(initialValue = Resource.Loading)
 
     when (data) {
         is Resource.Success -> {
-
+            DetailScreen(
+                movieItem = (data as Resource.Success<UiMovieDetailModel>).data,
+                onFavoriteClick = {},
+                onShareClick = {},
+                onSimilarMovieClick = {detailScreenOnClicks.onSimilarMovieClick(it)}
+            )
         }
 
         is Resource.Loading -> {
@@ -91,77 +98,80 @@ fun DetailScreenWithViewModel(
 fun DetailScreen(
     movieItem: UiMovieDetailModel,
     onFavoriteClick: (Int) -> Unit,
-    onShareClick: (Int) -> Unit
+    onShareClick: (Int) -> Unit,
+    onSimilarMovieClick: (Int) -> Unit
 ) {
 
-    val lazyListState= rememberLazyListState()
-    val height= 260.dp
-    val animationDuration= 500
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
     ) {
-        DetailScreeUp(
-            lazyListState = lazyListState,
-            animationDuration = animationDuration,
-            height = height,
-            movie = movieItem
-        )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            DetailScreeUp(
+                movie = movieItem,
+                onFavoriteClick = {onFavoriteClick(it)},
+                onShareClick = {onShareClick(it)}
+            )
 
-        DetailScreenDown(
-            lazyListState = lazyListState,
-            animationDuration = animationDuration,
-            height = height,
-            movie = movieItem,
-            onFavoriteClick = {onFavoriteClick(it)},
-            onShareClick = {onShareClick(it)}
-        )
+            DetailScreenTexts(modifier = Modifier.padding(horizontal = 8.dp),movie = movieItem)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Images(modifier = Modifier.padding(horizontal = 8.dp),imageList = movieItem.movie.images)
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            SimilarMovies(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                similarMovies = movieItem.similarMovies,
+                onSimilarMovieClick = onSimilarMovieClick
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+
     }
-
-
-
-
 }
+
+
 
 @Composable
 fun DetailScreeUp(
-    lazyListState: LazyListState,
-    animationDuration: Int,
-    height: Dp,
-    movie: UiMovieDetailModel
+    modifier: Modifier= Modifier,
+    movie: UiMovieDetailModel,
+    onFavoriteClick: (Int)-> Unit,
+    onShareClick: (Int)-> Unit
 ){
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .animateContentSize(animationSpec = tween(durationMillis = animationDuration))
-            .height(height = if (lazyListState.isScrolled) 0.dp else height)
-            .shadow(
-                elevation = 6.dp, spotColor = MaterialTheme.colorScheme.onBackground,
-                shape = RoundedCornerShape(
-                    topStart = 0.dp,
-                    topEnd = 0.dp,
-                    bottomStart = 40.dp,
-                    bottomEnd = 40.dp
-                )
-            )
-            .clip(
-                shape = RoundedCornerShape(
-                    topStart = 0.dp,
-                    topEnd = 0.dp,
-                    bottomStart = 40.dp,
-                    bottomEnd = 40.dp
-                )
-            )
-
-    ) {
-
+    Box() {
         AsyncImage(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = modifier
+                .padding(bottom = 8.dp)
+                .fillMaxWidth()
+                .height(400.dp)
+                .shadow(
+                    shape = RoundedCornerShape(
+                        topStart = 0.dp,
+                        topEnd = 0.dp,
+                        bottomStart = 40.dp,
+                        bottomEnd = 40.dp
+                    ),
+                    elevation = 20.dp, spotColor = MaterialTheme.colorScheme.onBackground
+                )
+                .clip(
+                    shape = RoundedCornerShape(
+                        topStart = 0.dp,
+                        topEnd = 0.dp,
+                        bottomStart = 40.dp,
+                        bottomEnd = 40.dp
+                    )
+                )
                 .drawWithCache {
                     val gradient = Brush.verticalGradient(
                         colors = listOf(Color.Transparent, Color.Black),
@@ -174,7 +184,7 @@ fun DetailScreeUp(
                     }
                 },
             model = ImageRequest.Builder(LocalContext.current)
-                .data("painterResource(id = R.drawable.image)")
+                .data(movie.movie.poster)
                 .crossfade(500)
                 .error(R.drawable.error)
                 .build(),
@@ -185,69 +195,47 @@ fun DetailScreeUp(
 
         Row(
             modifier = Modifier
-                .padding(start = 22.dp, bottom = 15.dp)
-                .align(Alignment.BottomStart)
+                .padding(end = 8.dp, top = 10.dp)
+                .align(Alignment.TopEnd)
+                .background(
+                    shape = RoundedCornerShape(45.dp),
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
+                )
+                .padding(4.dp)
+            ,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                modifier = Modifier
-                    .background(
-                        color = myYellow.copy(alpha = 0.6f),
-                        shape = RoundedCornerShape(4.dp)
-                    ),
-                text = " IMDB ${movie.movie.imdb_rating}/10 "
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-            Text(
-                modifier = Modifier
-                    .background(
-                        color = Color.White.copy(alpha = 0.2f),
-                        shape = RoundedCornerShape(4.dp)
-                    )
-                    .padding(horizontal = 2.dp),
-                text = movie.movie.runTime,
-                color = Color.White.copy(alpha = 0.7f)
-            )
+            IconButton(onClick = { onFavoriteClick(movie.movie.id)}) {
+                Icon(
+                    modifier = Modifier.size(40.dp),
+                    imageVector = if (movie.isFavorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
+                    contentDescription = "",
+                    tint = myRed
+                )
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            IconButton(onClick = { onShareClick(movie.movie.id) }) {
+                Icon(
+                    modifier = Modifier.size(40.dp),
+                    imageVector = Icons.Rounded.Share,
+                    contentDescription = "",
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
         }
     }
 }
 
 
-@Composable
-fun DetailScreenDown(
-    lazyListState: LazyListState,
-    animationDuration: Int,
-    height: Dp,
-    movie: UiMovieDetailModel,
-    onFavoriteClick: (Int) -> Unit,
-    onShareClick: (Int) -> Unit
-){
-    val padding by animateDpAsState(
-        targetValue = if (lazyListState.isScrolled) 0.dp else height,
-        animationSpec = tween(durationMillis = animationDuration)
-    )
-
-    LazyColumn(
-        modifier = Modifier.padding(top = padding),
-        state = lazyListState
-    ) {
-        item {
-            DetailScreenContent(
-                movie = movie,
-                onFavoriteClick = {onFavoriteClick(it)},
-                onShareClick = {onShareClick(it)}
-            )
-        }
-
-    }
-}
 
 @Composable
-fun DetailScreenContent(
+fun DetailScreenTexts(
+    modifier: Modifier= Modifier,
     movie: UiMovieDetailModel,
-    onFavoriteClick: (Int)-> Unit,
-    onShareClick: (Int)-> Unit
 ){
-    Box(modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)) {
+    Box(modifier = modifier) {
         Column() {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -261,47 +249,71 @@ fun DetailScreenContent(
                     Text(
                         modifier = Modifier
                             .background(
-                                color = MaterialTheme.colorScheme.tertiary,
+                                color = myYellow.copy(alpha = 0.6f),
                                 shape = RoundedCornerShape(6.dp)
-                            )
-                            .padding(all = 4.dp),
-                        text = stringResource(id = R.string.rated),
+                            ),
+                        text = " IMDB ${movie.movie.imdb_rating}/10 ",
                         style = TextStyle(
                             fontWeight = FontWeight.Bold,
-                            fontSize = MaterialTheme.typography.headlineMedium.fontSize,
-                            color = MaterialTheme.colorScheme.onTertiary.copy(alpha = 0.9f)
+                            fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
+
+                    Spacer(modifier = Modifier.width(6.dp))
+
                     Text(
-                        text = movie.movie.rated,
+                        modifier = Modifier
+                            .background(
+                                color = MaterialTheme.colorScheme.inverseOnSurface.copy(alpha = 0.8f),
+                                shape = RoundedCornerShape(4.dp)
+                            )
+                            .padding(horizontal = 2.dp),
+                        text = movie.movie.runTime,
                         style = TextStyle(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = MaterialTheme.typography.headlineMedium.fontSize,
+                            fontSize = MaterialTheme.typography.headlineSmall.fontSize,
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     )
                 }
+            }
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = { onFavoriteClick(movie.movie.id)}) {
-                        Icon(
-                            modifier = Modifier.size(45.dp),
-                            imageVector = if (movie.isFavorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
-                            contentDescription = "",
-                            tint = myRed
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier
+                        .background(
+                            color = MaterialTheme.colorScheme.tertiary,
+                            shape = RoundedCornerShape(6.dp)
                         )
-                    }
-                    IconButton(onClick = { onShareClick(movie.movie.id) }) {
-                        Icon(
-                            modifier = Modifier.size(45.dp),
-                            imageVector = Icons.Rounded.Share,
-                            contentDescription = ""
+                        .padding(all = 2.dp),
+                    text = "${stringResource(id = R.string.rated)}: ${movie.movie.rated}",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+                        color = MaterialTheme.colorScheme.onTertiary
+                    )
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    modifier = Modifier
+                        .background(
+                            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.8f),
+                            shape = RoundedCornerShape(6.dp)
                         )
-                    }
-                }
+                        .padding(horizontal = 8.dp),
+                    text = movie.movie.year,
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                )
             }
             
             Spacer(modifier = Modifier.height(12.dp))
@@ -356,6 +368,29 @@ fun DetailScreenContent(
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = movie.movie.released,
+                    style = TextStyle(
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(
+                    text = stringResource(id = R.string.country),
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                    )
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = movie.movie.country,
                     style = TextStyle(
                         fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
@@ -454,18 +489,102 @@ fun DetailScreenContent(
                     )
                 )
             }
-
-
+            
         }
     }
 }
 
 
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun Images(
+    modifier: Modifier= Modifier,
+    imageList: List<String>
+){
+    val pagerState = rememberPagerState()
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(220.dp)
+            .border(
+                width = 1.dp,
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colorScheme.primary
+            )
+            .shadow(
+                elevation = 6.dp, spotColor = MaterialTheme.colorScheme.onBackground,
+                shape = MaterialTheme.shapes.medium
+            )
+            .background(
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colorScheme.outline
+            )
+            .clip(MaterialTheme.shapes.medium),
+    ) {
+        HorizontalPager(
+            count = imageList.size,
+            state = pagerState,
+        ) { page ->
+            AsyncImage(
+                modifier = Modifier.fillMaxSize(),
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(imageList[page])
+                    .crossfade(500)
+                    .error(R.drawable.error)
+                    .build(),
+                placeholder = painterResource(id = R.drawable.place_holder) ,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+            )
+        }
+
+        HorizontalPagerIndicator(
+            pagerState = pagerState,
+            modifier = Modifier
+                .align(alignment = Alignment.BottomCenter)
+                .padding(8.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                    shape = RoundedCornerShape(40.dp)
+                )
+                .padding(4.dp),
+            inactiveColor = MaterialTheme.colorScheme.primary,
+            activeColor = MaterialTheme.colorScheme.inversePrimary
+        )
 
 
+    }
+}
 
-val LazyListState.isScrolled: Boolean
-    get()= firstVisibleItemIndex > 0 || firstVisibleItemScrollOffset > 0  //to figure out if list is scrolling or in the first origin  position
+
+@Composable
+fun SimilarMovies(
+    modifier: Modifier= Modifier,
+    similarMovies: List<DomainMovieModel>,
+    onSimilarMovieClick: (Int) -> Unit
+){
+    Column(modifier = modifier.fillMaxWidth()) {
+
+        Text(
+            text = stringResource(id = R.string.similar_movies),
+            style = TextStyle(
+                fontWeight = FontWeight.Bold,
+                fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+            )
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        ImageThumbnailRow(
+            movies = similarMovies,
+            onClick = onSimilarMovieClick
+        )
+    }
+}
+
+
 
 
 
@@ -480,7 +599,8 @@ private fun Preview(){
                 similarMovies = sampleMovieList
             ),
             onFavoriteClick = {},
-            onShareClick = {}
+            onShareClick = {},
+            onSimilarMovieClick = {}
         )
     }
 }

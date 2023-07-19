@@ -1,6 +1,6 @@
 package com.farshad.topmovies_compose.data.remote
 
-import com.farshad.moviesAppCompose.data.model.network.GenresModel
+import com.farshad.topmovies_compose.data.model.network.GenresModel
 import com.farshad.moviesAppCompose.data.model.network.NetworkMovieModel
 import com.farshad.moviesAppCompose.data.model.network.PagingModel
 import com.farshad.moviesAppCompose.data.model.network.RegisterPostBody
