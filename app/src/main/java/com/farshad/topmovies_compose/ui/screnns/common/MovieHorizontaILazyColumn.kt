@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -59,7 +60,7 @@ import com.valentinilk.shimmer.shimmer
 fun MovieHorizontalLazyColumn(
     modifier: Modifier= Modifier,
     movieList: LazyPagingItems<DomainMovieModel>,
-    onRowClick: (Int)-> Unit,
+    onMovieClick: (Int)-> Unit,
 ){
     val listState= rememberLazyListState()
     val listForRow by remember { mutableStateOf(movieList) }
@@ -88,7 +89,7 @@ fun MovieHorizontalLazyColumn(
                 MovieHorizontalItem(
                     modifier = Modifier.animateItemPlacement(),
                     movie = movie,
-                    onRowClick = {onRowClick(it)}
+                    onRowClick = {onMovieClick(it)}
                 )
             }
         }

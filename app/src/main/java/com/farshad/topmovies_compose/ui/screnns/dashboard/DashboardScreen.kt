@@ -32,6 +32,37 @@ import com.farshad.topmovies_compose.util.DarkAndLightPreview
 import com.farshad.topmovies_compose.util.sampleGenreList
 import com.farshad.topmovies_compose.util.sampleMovieList
 
+@Composable
+fun DashboardScreenWithViewModel(
+    navController: NavHostController,
+    dashboardViewModel: DashboardViewModel = hiltViewModel(),
+    sharedViewModel: SharedViewModel,
+) {
+    val dashboardOnClicks= DashboardOnClicks(navController)
+
+    val data by dashboardViewModel.combinedData.collectAsStateWithLifecycle(initialValue = Resource.Loading)
+
+    when (data) {
+        is Resource.Success -> {
+            DashboardScreen(
+                movieAndGenre = (data as Resource.Success<DashboardUiModel>).data,
+                onImageClick = {dashboardOnClicks.onMovieClick(it)},
+                onGenreClick = {genreId->
+                    sharedViewModel.updateSelectedGenreId(genreId)
+                    dashboardOnClicks.onGenreClick()
+                },
+                onViewAllGenreClick = {dashboardOnClicks.onGenreClick()},
+                onViewAllMovieClick = {dashboardOnClicks.onViewAllMovieClick()}
+            )
+        }
+
+        is Resource.Loading -> {
+            LoadingAnimation()
+        }
+        else -> {}
+    }
+
+}
 
 @Composable
 fun DashboardScreen(
@@ -95,37 +126,7 @@ fun DashboardScreen(
     }
 }
 
-@Composable
-fun DashboardScreenWithViewModel(
-    navController: NavHostController,
-    dashboardViewModel: DashboardViewModel = hiltViewModel(),
-    sharedViewModel: SharedViewModel,
-) {
-    val dashboardOnClicks= DashboardOnClicks(navController)
 
-    val data by dashboardViewModel.combinedData.collectAsStateWithLifecycle(initialValue = Resource.Loading)
-
-    when (data) {
-        is Resource.Success -> {
-            DashboardScreen(
-                movieAndGenre = (data as Resource.Success<DashboardUiModel>).data,
-                onImageClick = {dashboardOnClicks.onMovieClick(it)},
-                onGenreClick = {genreId->
-                    sharedViewModel.updateSelectedGenreId(genreId)
-                    dashboardOnClicks.onGenreClick()
-                },
-                onViewAllGenreClick = {dashboardOnClicks.onGenreClick()},
-                onViewAllMovieClick = {dashboardOnClicks.onViewAllMovieClick()}
-            )
-        }
-
-        is Resource.Loading -> {
-            LoadingAnimation()
-        }
-        else -> {}
-    }
-
-}
 
 
 @DarkAndLightPreview

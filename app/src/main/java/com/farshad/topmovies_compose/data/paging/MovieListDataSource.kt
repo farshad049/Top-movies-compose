@@ -2,24 +2,21 @@ package com.farshad.topmovies_compose.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.farshad.moviesAppCompose.data.model.network.PagingModel
+import com.farshad.moviesAppCompose.data.remote.SimpleResponse
 import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.topmovies_compose.data.model.mapper.MovieMapper
-import com.farshad.moviesAppCompose.data.model.network.PagingModel
 import com.farshad.topmovies_compose.data.remote.ApiClient
-import com.farshad.moviesAppCompose.data.remote.SimpleResponse
 
+class MovieListDataSource(private val apiClient: ApiClient, private val movieMapper: MovieMapper)
+    : PagingSource<Int, DomainMovieModel>() {
 
-class MovieByGenreDataSource (
-    private val apiClient: ApiClient,
-    private val movieMapper: MovieMapper,
-    private val genreId:Int,
-)  : PagingSource<Int, DomainMovieModel>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, DomainMovieModel> {
 
         val currentPage = params.key ?: 1
 
         return try {
-            val request= apiClient.getMovieByGenrePaging(genreId,currentPage)
+            val request=apiClient.getMoviesPaging(currentPage)
             val endOfPaginationReached = request.bodyNullable?.data?.isEmpty()
             if (request.bodyNullable?.data?.isNotEmpty() == true) {
                 LoadResult.Page(
@@ -37,7 +34,6 @@ class MovieByGenreDataSource (
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
-
     }
 
     override fun getRefreshKey(state: PagingState<Int, DomainMovieModel>): Int? {
@@ -46,6 +42,7 @@ class MovieByGenreDataSource (
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
         }
     }
+
 
 
 

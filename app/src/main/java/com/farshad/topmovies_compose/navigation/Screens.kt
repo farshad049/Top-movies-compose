@@ -7,6 +7,7 @@ import androidx.compose.material.icons.rounded.Movie
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.farshad.topmovies_compose.navigation.NavigationConstants.DASHBOARD_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.DETAIL_SCREEN
+import com.farshad.topmovies_compose.navigation.NavigationConstants.Filter_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.MOVIE_BY_GENRE_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.MOVIE_ID
 import com.farshad.topmovies_compose.navigation.NavigationConstants.MOVIE_LIST_SCREEN
@@ -30,6 +31,11 @@ sealed class Screens(
     object MovieList: Screens(
         icon = Icons.Rounded.LocalMovies,
         route = MOVIE_LIST_SCREEN
+    )
+    
+    object Filter: Screens(
+        icon = null,
+        route = Filter_SCREEN
     )
 
 

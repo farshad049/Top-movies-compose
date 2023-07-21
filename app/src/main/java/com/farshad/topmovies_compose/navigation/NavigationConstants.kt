@@ -13,6 +13,7 @@ object NavigationConstants {
     const val MOVIE_BY_GENRE_SCREEN= "movie_by_genre_screen"
     const val DETAIL_SCREEN= "detail_screen"
     const val MOVIE_LIST_SCREEN = "movie_list_screen"
+    const val Filter_SCREEN= "filter_screen"
 
 
     //nav arg names

@@ -1,7 +1,7 @@
 package com.farshad.topmovies_compose.ui.theme
 import androidx.compose.ui.graphics.Color
 
-val md_theme_light_primary = Color(0xFF875300)
+val md_theme_light_primary = Color(0xFFAC6F0E)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
 val md_theme_light_primaryContainer = Color(0xFFFFDDB9)
 val md_theme_light_onPrimaryContainer = Color(0xFF2B1700)

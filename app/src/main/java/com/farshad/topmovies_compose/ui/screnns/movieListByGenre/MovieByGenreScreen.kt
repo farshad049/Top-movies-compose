@@ -27,6 +27,50 @@ import com.farshad.topmovies_compose.ui.screnns.movieListByGenre.model.UiGenresM
 
 
 @Composable
+fun MovieByGenreScreenWithViewModel(
+    navController: NavHostController,
+    movieByGenreViewModel: MovieByGenreViewModel = hiltViewModel(),
+    sharedViewModel: SharedViewModel,
+) {
+    val movieByGenreOnClicks= MovieByGenreOnClicks(navController)
+
+
+    val sharedGenreId= sharedViewModel.genreId
+    LaunchedEffect(key1 = sharedGenreId){
+        movieByGenreViewModel.submitQuery(sharedGenreId)
+    }
+
+
+    val genreList by movieByGenreViewModel.dataForMovieByGenreScreen.collectAsStateWithLifecycle(
+        initialValue = Resource.Loading
+    )
+
+    val movieList = movieByGenreViewModel.movieByGenreFlow.collectAsLazyPagingItems()
+
+
+    when (genreList) {
+        is Resource.Success -> {
+            MovieByGenreScreen(
+                genreList = (genreList as Resource.Success<UiGenresModel>).data.genreList,
+                movieList = movieList,
+                onGenreClick = { genreId ->
+                    movieByGenreViewModel.updateSelectedGenreId(genreId)
+                    movieByGenreViewModel.submitQuery(genreId)
+                },
+                onMovieClick = {movieByGenreOnClicks.onMovieClick(it)},
+            )
+        }
+
+        is Resource.Loading -> {
+            LoadingAnimation()
+        }
+
+        else -> {}
+    }
+
+}
+
+@Composable
 fun MovieByGenreScreen(
     modifier: Modifier = Modifier,
     genreList: List<UiGenresModel.GenreWithFavorite>,
@@ -52,59 +96,13 @@ fun MovieByGenreScreen(
             MovieHorizontalLazyColumn(
                 modifier.padding(horizontal = 8.dp),
                 movieList = movieList,
-                onRowClick = { onMovieClick(it) }
+                onMovieClick = onMovieClick
             )
         }
     }
 }
 
-@Composable
-fun MovieByGenreScreenWithViewModel(
-    navController: NavHostController,
-    movieByGenreViewModel: MovieByGenreViewModel = hiltViewModel(),
-    sharedViewModel: SharedViewModel
-//    onMovieClick: (Int) -> Unit
-) {
 
-    val sharedGenreId= sharedViewModel.genreId
-    LaunchedEffect(key1 = sharedGenreId){
-        if (sharedGenreId != null){
-            movieByGenreViewModel.submitQuery(sharedGenreId)
-        }
-    }
-
-
-
-
-
-    val genreList by movieByGenreViewModel.dataForMovieByGenreScreen.collectAsStateWithLifecycle(
-        initialValue = Resource.Loading
-    )
-
-    val movieList = movieByGenreViewModel.movieByGenreFlow.collectAsLazyPagingItems()
-
-
-    when (genreList) {
-        is Resource.Success -> {
-            MovieByGenreScreen(
-                genreList = (genreList as Resource.Success<UiGenresModel>).data.genreList,
-                movieList = movieList,
-                onGenreClick = { genreId ->
-                    movieByGenreViewModel.updateSelectedGenreId(genreId)
-                    movieByGenreViewModel.submitQuery(genreId)
-                },
-                onMovieClick = {},
-            )
-        }
-
-        is Resource.Loading -> {
-            LoadingAnimation()
-        }
-
-        else -> {}
-    }
-
-}
 
 
 
