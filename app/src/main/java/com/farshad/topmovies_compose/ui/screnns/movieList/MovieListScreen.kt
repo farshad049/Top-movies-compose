@@ -61,7 +61,6 @@ fun MovieListScreenWithViewModel(
     MovieListScreen(
         movieList = movieList,
         onMovieClick = {movieListOnClicks.onMovieClick(it)},
-        filterForMovieList = filterForMovieList,
         filtersForLazyRow = filterForFilterRow,
         onFilterRowItemClick = {movieListOnClicks.onFilterRowItemClick(it)},
         onFilterIconClick = {movieListOnClicks.onFilterIconClick()}
@@ -73,7 +72,6 @@ fun MovieListScreenWithViewModel(
 @Composable
 fun MovieListScreen(
     movieList: LazyPagingItems<DomainMovieModel>,
-    filterForMovieList: ModelDataForMovieList,
     onMovieClick: (Int)-> Unit,
     filtersForLazyRow: Set<String>,
     onFilterRowItemClick: (String) -> Unit,

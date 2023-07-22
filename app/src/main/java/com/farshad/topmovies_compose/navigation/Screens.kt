@@ -11,6 +11,7 @@ import com.farshad.topmovies_compose.navigation.NavigationConstants.Filter_SCREE
 import com.farshad.topmovies_compose.navigation.NavigationConstants.MOVIE_BY_GENRE_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.MOVIE_ID
 import com.farshad.topmovies_compose.navigation.NavigationConstants.MOVIE_LIST_SCREEN
+import com.farshad.topmovies_compose.navigation.NavigationConstants.SEARCH_SCREEN
 
 sealed class Screens(
     val icon: ImageVector?,
@@ -37,6 +38,11 @@ sealed class Screens(
         icon = null,
         route = Filter_SCREEN
     )
+
+    object Search: Screens(
+        icon = null,
+        route = SEARCH_SCREEN
+        )
 
 
     object Detail: Screens(

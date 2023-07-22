@@ -14,6 +14,7 @@ object NavigationConstants {
     const val DETAIL_SCREEN= "detail_screen"
     const val MOVIE_LIST_SCREEN = "movie_list_screen"
     const val Filter_SCREEN= "filter_screen"
+    const val SEARCH_SCREEN= "search_screen"
 
 
     //nav arg names

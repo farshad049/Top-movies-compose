@@ -28,6 +28,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,20 +48,35 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.farshad.topmovies_compose.R
+import com.farshad.topmovies_compose.navigation.NavigationConstants.SEARCH_SCREEN
 import com.farshad.topmovies_compose.ui.screnns.common.MovieHorizontalItemShimmer
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
 
 
 @Composable
 fun MainScreen(navHostController: NavHostController) {
+
+    var showBottomAndTopBar by rememberSaveable { mutableStateOf(true) }
+    val navBackStackEntry by navHostController.currentBackStackEntryAsState()
+    var topBarPadding by remember { mutableStateOf(70.dp) }
+
+    topBarPadding = if (navBackStackEntry?.destination?.route == SEARCH_SCREEN) 0.dp else 70.dp
+
+    showBottomAndTopBar =
+        when (navBackStackEntry?.destination?.route) {
+        SEARCH_SCREEN -> false // on this screen bottom bar should be hidden
+        else -> true // in all other cases show bottom bar
+    }
+
+
     Scaffold(
-        topBar = { MyTopBar(onTopBarClick = {})},
-        bottomBar = { BottomBar(navHostController = navHostController) }
+        topBar = { if (showBottomAndTopBar) MyTopBar(onTopBarClick = {navHostController.navigate(Screens.Search.route)})},
+        bottomBar = { if (showBottomAndTopBar) BottomBar(navHostController = navHostController) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 70.dp, bottom = innerPadding.calculateBottomPadding())
+                .padding(top = topBarPadding, bottom = innerPadding.calculateBottomPadding())
         ) {
             SetupNavGraph(navController = navHostController)
         }
@@ -160,7 +179,7 @@ fun MyBottomNavigation(
             )
             .background(
                 brush = backGroundColor,
-                shape= shape
+                shape = shape
             )
             .clip(
                 shape = shape
@@ -211,10 +230,10 @@ fun MyTopBar(
             )
             .background(
                 brush = backgroundColor,
-                shape= shape
+                shape = shape
             )
-            .clip(shape =shape )
-            .clickable { onTopBarClick }
+            .clip(shape = shape)
+            .clickable { onTopBarClick() }
     ) {
         Row(
             modifier = Modifier

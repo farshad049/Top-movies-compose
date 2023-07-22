@@ -1,5 +1,6 @@
 package com.farshad.topmovies_compose.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -11,7 +12,10 @@ import com.farshad.topmovies_compose.navigation.NavigationConstants.DASHBOARD_GR
 import com.farshad.topmovies_compose.navigation.NavigationConstants.ROOT_GRAPH
 import com.farshad.topmovies_compose.ui.screnns.filter.FilterViewModel
 import com.farshad.topmovies_compose.ui.screnns.movieDetail.DetailScreenWithViewModel
+import com.farshad.topmovies_compose.ui.screnns.search.SearchScreen
+import com.farshad.topmovies_compose.ui.screnns.search.SearchScreenWithViewModel
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun SetupNavGraph(navController: NavHostController){
 
@@ -29,6 +33,10 @@ fun SetupNavGraph(navController: NavHostController){
             dashboardNavGraph(navController = navController,sharedViewModel)
 
             movieListNavGraph(navController= navController, filterViewModel)
+
+            composable(route = Screens.Search.route){
+                SearchScreenWithViewModel(navController = navController)
+            }
 
 
             composable(
