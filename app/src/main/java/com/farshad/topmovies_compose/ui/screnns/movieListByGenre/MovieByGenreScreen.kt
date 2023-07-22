@@ -98,6 +98,7 @@ fun MovieByGenreScreen(
                 movieList = movieList,
                 onMovieClick = onMovieClick
             )
+
         }
     }
 }

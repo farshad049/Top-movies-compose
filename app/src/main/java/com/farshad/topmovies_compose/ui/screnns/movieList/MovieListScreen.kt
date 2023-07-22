@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -14,31 +15,27 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.Filter
 import androidx.compose.material.icons.rounded.FilterAlt
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
-import com.farshad.topmovies_compose.data.model.network.GenresModel
-import com.farshad.topmovies_compose.navigation.SharedViewModel
-import com.farshad.topmovies_compose.ui.screnns.common.ChipSuggestionItem
 import com.farshad.topmovies_compose.ui.screnns.common.MovieHorizontalLazyColumn
 import com.farshad.topmovies_compose.ui.screnns.filter.FilterViewModel
+import com.farshad.topmovies_compose.ui.screnns.filter.model.ModelDataForMovieList
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
 
@@ -49,15 +46,24 @@ fun MovieListScreenWithViewModel(
     filterViewModel: FilterViewModel,
     movieListViewModel: MovieListViewModel= hiltViewModel()
 ){
-    val movieListOnClicks= MovieListOnClicks(navController)
+    val movieListOnClicks= MovieListOnClicks(navHostController = navController, filterViewModel = filterViewModel)
 
     val movieList= movieListViewModel.movieListFlow.collectAsLazyPagingItems()
+
+    val filterForFilterRow by filterViewModel.combinedDataForFilterRowMovieList.collectAsStateWithLifecycle()
+
+    val filterForMovieList by filterViewModel.combinedFilterDataForMovieList.collectAsStateWithLifecycle()
+
+    LaunchedEffect(key1 = filterForMovieList ){
+        movieListViewModel.submitQuery(filterForMovieList)
+    }
 
     MovieListScreen(
         movieList = movieList,
         onMovieClick = {movieListOnClicks.onMovieClick(it)},
-        filters = setOf(),
-        onFilterClick = {},
+        filterForMovieList = filterForMovieList,
+        filtersForLazyRow = filterForFilterRow,
+        onFilterRowItemClick = {movieListOnClicks.onFilterRowItemClick(it)},
         onFilterIconClick = {movieListOnClicks.onFilterIconClick()}
     )
 
@@ -67,23 +73,24 @@ fun MovieListScreenWithViewModel(
 @Composable
 fun MovieListScreen(
     movieList: LazyPagingItems<DomainMovieModel>,
+    filterForMovieList: ModelDataForMovieList,
     onMovieClick: (Int)-> Unit,
-    filters: Set<String>,
-    onFilterClick: (String) -> Unit,
+    filtersForLazyRow: Set<String>,
+    onFilterRowItemClick: (String) -> Unit,
     onFilterIconClick: () -> Unit
 ){
     Box(modifier = Modifier.fillMaxSize()){
         Column(modifier = Modifier.fillMaxSize()) {
 
             FilterRow(
-                filters = filters,
-                onChipClick = onFilterClick,
+                filters = filtersForLazyRow,
+                onChipClick = onFilterRowItemClick,
                 onFilterIconClick = onFilterIconClick
             )
 
             MovieHorizontalLazyColumn(
                 movieList = movieList,
-                onMovieClick = onMovieClick
+                onMovieClick = onMovieClick,
             )
         }
 
@@ -113,6 +120,7 @@ fun FilterRow(
             onClick = { onFilterIconClick() }
         ) {
             Icon(
+                modifier = Modifier.size(30.dp),
                 imageVector = Icons.Rounded.FilterAlt,
                 tint = MaterialTheme.colorScheme.primary,
                 contentDescription = ""

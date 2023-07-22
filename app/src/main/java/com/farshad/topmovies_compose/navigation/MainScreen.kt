@@ -57,7 +57,7 @@ fun MainScreen(navHostController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 70.dp)
+                .padding(top = 70.dp, bottom = innerPadding.calculateBottomPadding())
         ) {
             SetupNavGraph(navController = navHostController)
         }

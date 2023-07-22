@@ -8,7 +8,10 @@ import androidx.paging.cachedIn
 import com.farshad.topmovies_compose.data.model.mapper.MovieMapper
 import com.farshad.topmovies_compose.data.paging.MovieListDataSource
 import com.farshad.topmovies_compose.data.remote.ApiClient
+import com.farshad.topmovies_compose.ui.screnns.filter.FilterViewModel
+import com.farshad.topmovies_compose.ui.screnns.filter.model.ModelDataForMovieList
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,10 +21,11 @@ class MovieListViewModel @Inject constructor(
 ):ViewModel() {
 
 
+    private var filters= ModelDataForMovieList()
     var movieDataSource: MovieListDataSource? = null
         get() {
             if (field == null || field?.invalid == true){
-                field = MovieListDataSource(apiClient,movieMapper)
+                field = MovieListDataSource(apiClient,movieMapper,filters)
             }
             return field
         }
@@ -34,6 +38,11 @@ class MovieListViewModel @Inject constructor(
     )
     ) { movieDataSource!! }.flow.cachedIn(viewModelScope)
 
+    fun submitQuery(filtersFrom: ModelDataForMovieList){
+        filters= filtersFrom
+        movieDataSource?.invalidate()
+
+    }
 
 
 

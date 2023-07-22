@@ -2,7 +2,6 @@ package com.farshad.topmovies_compose.ui.screnns.filter
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.farshad.moviesAppCompose.data.model.ui.Resource
 import com.farshad.topmovies_compose.ui.screnns.filter.model.DataForFilterScreen
 import com.farshad.topmovies_compose.ui.screnns.filter.model.FilterAndSelectedFilterList
 import com.farshad.topmovies_compose.ui.screnns.filter.model.ModelDataForMovieList
@@ -57,6 +56,59 @@ class FilterViewModel @Inject constructor(): ViewModel() {
                     }
                 )
                 _filterByGenreInfoMutableFlow.emit(newFilter)
+            }
+        }
+    }
+
+    fun onImdbFilterClick(selectedFilter : String){
+        viewModelScope.launch {
+            filterByImdbRateInfoFlow.value.also { currentSelectedFilter->
+
+                val newFilter =  currentSelectedFilter.copy(
+                    selectedFilters = if(currentSelectedFilter.selectedFilters.contains(selectedFilter)){
+                        currentSelectedFilter.selectedFilters - selectedFilter
+                    }else{
+                        currentSelectedFilter.selectedFilters + selectedFilter
+                    }
+                )
+                _filterByImdbRateInfoFlow.emit(newFilter)
+            }
+        }
+    }
+
+    fun onMovieListFilterRowItemClick(filterToRemove : String){
+        viewModelScope.launch {
+            when{
+
+                filterByGenreInfoFlow.value.filters.contains(filterToRemove) -> {
+                        val currentSelectedFilter = filterByGenreInfoFlow.value
+
+                        val newFilter =  currentSelectedFilter.copy(
+                            selectedFilters = if(currentSelectedFilter.selectedFilters.contains(filterToRemove)){
+                                currentSelectedFilter.selectedFilters - filterToRemove
+                            }else{
+                                currentSelectedFilter.selectedFilters
+                            }
+                        )
+                        _filterByGenreInfoMutableFlow.emit(newFilter)
+                }
+
+
+                filterByImdbRateInfoFlow.value.filters.contains(filterToRemove) -> {
+                        val currentSelectedFilter = filterByImdbRateInfoFlow.value
+
+                        val newFilter =  currentSelectedFilter.copy(
+                            selectedFilters = if(currentSelectedFilter.selectedFilters.contains(filterToRemove)){
+                                currentSelectedFilter.selectedFilters - filterToRemove
+                            }else{
+                                currentSelectedFilter.selectedFilters
+                            }
+                        )
+                        _filterByImdbRateInfoFlow.emit(newFilter)
+                }
+
+
+
             }
         }
     }

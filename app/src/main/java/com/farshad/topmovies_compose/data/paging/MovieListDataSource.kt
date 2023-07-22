@@ -7,8 +7,13 @@ import com.farshad.moviesAppCompose.data.remote.SimpleResponse
 import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.topmovies_compose.data.model.mapper.MovieMapper
 import com.farshad.topmovies_compose.data.remote.ApiClient
+import com.farshad.topmovies_compose.ui.screnns.filter.model.ModelDataForMovieList
 
-class MovieListDataSource(private val apiClient: ApiClient, private val movieMapper: MovieMapper)
+class MovieListDataSource(
+    private val apiClient: ApiClient,
+    private val movieMapper: MovieMapper,
+    private val filters: ModelDataForMovieList
+    )
     : PagingSource<Int, DomainMovieModel>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, DomainMovieModel> {
@@ -20,7 +25,12 @@ class MovieListDataSource(private val apiClient: ApiClient, private val movieMap
             val endOfPaginationReached = request.bodyNullable?.data?.isEmpty()
             if (request.bodyNullable?.data?.isNotEmpty() == true) {
                 LoadResult.Page(
-                    data = request.bodyNullable?.data?.map { movieMapper.buildFrom(it) } ?: emptyList(),
+                    data = request.bodyNullable?.data?.map { movieMapper.buildFrom(it) }?.filter {toBeFilter->
+                        filters.genreSetOfSelectedFilters.all { toBeFilter.genres.contains(it) }
+                                &&
+                                filters.imdbSetOfSelectedFilters.all { toBeFilter.imdb_rating.toDouble() > it.toDouble() }
+
+                    } ?: emptyList(),
                     prevKey = if (currentPage == 1) null else currentPage - 1,
                     nextKey = if (endOfPaginationReached == true) null else currentPage + 1
                 )

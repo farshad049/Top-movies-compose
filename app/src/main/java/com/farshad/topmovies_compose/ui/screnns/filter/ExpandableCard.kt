@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxColors
 import androidx.compose.material.ContentAlpha
@@ -38,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -74,12 +76,13 @@ fun ExpandableCard(
                 shape = MaterialTheme.shapes.large,
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
             )
+            .clip(shape = MaterialTheme.shapes.large)
             .clickable { expandableState = !expandableState },
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp)
+                .padding(8.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -101,6 +104,7 @@ fun ExpandableCard(
                     onClick = { expandableState = !expandableState } ,
                 ) {
                     Icon(
+                        modifier = Modifier.size(40.dp),
                         imageVector = Icons.Default.ArrowDropDown,
                         tint = MaterialTheme.colorScheme.onPrimary,
                         contentDescription = "Drop-down-arrow"
@@ -135,9 +139,11 @@ fun FilterRow(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+                color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.7f),
                 shape = MaterialTheme.shapes.medium
             )
+            .padding(6.dp)
+            .clip(shape = MaterialTheme.shapes.medium)
             .clickable { onFilterClick(uiFilter.filterDisplayName) },
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -146,10 +152,16 @@ fun FilterRow(
             color = MaterialTheme.colorScheme.onPrimary
         )
 
-        Checkbox(
+
+        androidx.compose.material3.Checkbox(
             checked = uiFilter.isSelected,
-            onCheckedChange = null
+            onCheckedChange = null,
+            colors = CheckboxDefaults.colors(
+                checkmarkColor= MaterialTheme.colorScheme.onTertiary,
+            )
         )
+
+
     }
 }
 

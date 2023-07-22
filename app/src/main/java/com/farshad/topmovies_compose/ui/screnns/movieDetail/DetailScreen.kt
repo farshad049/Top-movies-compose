@@ -136,7 +136,6 @@ fun DetailScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            //Spacer(modifier = Modifier.height(56.dp))
         }
 
     }
