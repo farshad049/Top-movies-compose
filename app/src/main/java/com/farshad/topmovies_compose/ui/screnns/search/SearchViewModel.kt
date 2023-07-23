@@ -1,5 +1,8 @@
 package com.farshad.topmovies_compose.ui.screnns.search
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -20,15 +23,20 @@ class SearchViewModel @Inject constructor(
     private val movieMapper: MovieMapper
     ):ViewModel() {
 
+    var userSearch by mutableStateOf<String>("")
+        private set
+
+    fun updateUserSearch(newUserSearch: String){
+        userSearch = newUserSearch
+    }
 
 
-    private var currentUserSearch:String=""
+   // private var currentUserSearch:String=""
 
     private var pagingSource: SearchDataSource? = null
         get() {
             if (field == null || field?.invalid == true){
-                field = SearchDataSource(apiClient,movieMapper,userSearch = currentUserSearch)
-                { viewModelScope.launch { _localExceptionFlow.send(it) } }
+                field = SearchDataSource(apiClient,movieMapper,userSearch = userSearch)
             }
             return field
         }
@@ -42,13 +50,12 @@ class SearchViewModel @Inject constructor(
     ) { pagingSource!! }.flow.cachedIn(viewModelScope)
 
 
-    private val _localExceptionFlow = Channel<SearchDataSource.LocalException>()
-    val localExceptionFlow= _localExceptionFlow.receiveAsFlow()
 
 
 
     fun submitQuery(userSearch:String){
-        currentUserSearch=userSearch
+        updateUserSearch(userSearch)
+       // currentUserSearch=userSearch
         pagingSource?.invalidate()
 
     }

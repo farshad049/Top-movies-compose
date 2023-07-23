@@ -1,12 +1,18 @@
 package com.farshad.topmovies_compose.ui.screnns.search
 
+import android.os.Handler
+import android.os.Looper
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -21,6 +27,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -28,6 +35,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -46,16 +56,24 @@ import com.farshad.topmovies_compose.ui.screnns.common.MovieHorizontalLazyColumn
 @Composable
 fun SearchScreenWithViewModel(
     navController: NavHostController,
-    searchViewModel: SearchViewModel = hiltViewModel()
+    searchViewModel: SearchViewModel = hiltViewModel(),
+    searchHistoryViewModel: SearchHistoryViewModel= hiltViewModel()
 ) {
-    val searchOnClicks= SearchOnClicks(navHostController = navController, searchViewModel = searchViewModel)
+    val searchOnClicks= SearchOnClicks(
+        navHostController = navController,
+        searchViewModel = searchViewModel,
+        searchHistoryViewModel= searchHistoryViewModel
+    )
 
     val movieList= searchViewModel.searchFlow.collectAsLazyPagingItems()
+    val movieHistoryItemCount by searchHistoryViewModel.searchHistoryListFlow.collectAsState()
 
     SearchScreen(
         movieList = movieList,
-        onMovieClick = {searchOnClicks.onMovieClick(it)},
-        onSearchClick = {searchOnClicks.onSearchClick(it)}
+        onMovieClick = {id, title ->searchOnClicks.onMovieClick(id, title)},
+        onSearchClick = {searchOnClicks.onSearchClick(it)},
+        searchViewModel = searchViewModel,
+        movieHistoryItemCount= movieHistoryItemCount.size
     )
 }
 
@@ -63,8 +81,10 @@ fun SearchScreenWithViewModel(
 @Composable
 fun SearchScreen(
     movieList: LazyPagingItems<DomainMovieModel>,
-    onMovieClick: (Int)-> Unit,
-    onSearchClick: (String) -> Unit
+    onMovieClick: (Int, String)-> Unit,
+    onSearchClick: (String) -> Unit,
+    searchViewModel: SearchViewModel,
+    movieHistoryItemCount: Int
 ) {
     Box(
         modifier = Modifier
@@ -74,15 +94,22 @@ fun SearchScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
+                .padding(all = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            SearchWidget(onSearchClicked = {onSearchClick(it)})
+            SearchWidget(
+                onSearchClicked = {onSearchClick(it)},
+                viewModel = searchViewModel
+            )
 
-            MovieHorizontalLazyColumn(
+            Spacer(modifier = Modifier.height(12.dp))
+
+            MovieHorizontalLazyColumnSearchScreen(
                 movieList = movieList,
                 onMovieClick = onMovieClick,
+                userSearch = searchViewModel.userSearch,
+                movieHistoryItemCount= movieHistoryItemCount
             )
 
         }
@@ -91,12 +118,39 @@ fun SearchScreen(
 
 @Composable
 fun SearchWidget(
-    onSearchClicked: (String) -> Unit
+    onSearchClicked: (String) -> Unit,
+    viewModel: SearchViewModel
 ){
     var text by rememberSaveable { mutableStateOf("") }
+    val shape = RoundedCornerShape(35.dp)
+    val backgroundColor= Brush.verticalGradient(
+        colors = listOf(
+            Color.Transparent,
+            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f),
+            Color.Transparent,
+        )
+    )
+
+     val handler = Handler(Looper.getMainLooper())
+     val searchRunnable = Runnable { viewModel.submitQuery(text) }
 
     Box(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f),
+                shape = shape
+            )
+            .shadow(
+                elevation = 8.dp, spotColor = MaterialTheme.colorScheme.onBackground,
+                shape = RoundedCornerShape(35.dp)
+            )
+            .background(
+                brush = backgroundColor,
+                shape = shape
+            )
+            .clip(shape = shape)
     ) {
         TextField(
             modifier = Modifier
@@ -105,7 +159,11 @@ fun SearchWidget(
                     contentDescription = "TextField"
                 },
             value = text,
-            onValueChange = { text = it },
+            onValueChange = {
+                text = it
+                handler.removeCallbacks(searchRunnable)
+                handler.postDelayed(searchRunnable,500L)
+                            },
             placeholder = {
                 Text(
                     modifier = Modifier

@@ -1,14 +1,11 @@
-package com.farshad.topmovies_compose.ui.screnns.common
+package com.farshad.topmovies_compose.ui.screnns.search
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,7 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -49,7 +46,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.topmovies_compose.R
-import com.farshad.topmovies_compose.ui.screnns.search.NoResultFound
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import com.farshad.topmovies_compose.ui.theme.myYellow
 import com.farshad.topmovies_compose.util.Convertors
@@ -60,17 +56,29 @@ import com.valentinilk.shimmer.shimmer
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MovieHorizontalLazyColumn(
+fun MovieHorizontalLazyColumnSearchScreen(
     modifier: Modifier= Modifier,
     movieList: LazyPagingItems<DomainMovieModel>,
-    onMovieClick: (Int)-> Unit,
+    onMovieClick: (Int, String)-> Unit,
+    userSearch: String,
+    movieHistoryItemCount: Int
 ){
     val listState= rememberLazyListState()
     val listForRow by remember { mutableStateOf(movieList) }
 
+    if (listForRow.loadState.refresh is LoadState.NotLoading &&
+        listForRow.loadState.append.endOfPaginationReached &&
+        listForRow.itemCount < 1
+    ){
+        NoResultFound()
+    }
 
     if (listForRow.loadState.refresh is LoadState.Loading){
         MovieHorizontalItemShimmerList()
+    }
+
+    if (userSearch.isEmpty() && movieHistoryItemCount != 0){
+        SearchHistoryScreenWithViewModel()
     }
 
 
@@ -86,7 +94,7 @@ fun MovieHorizontalLazyColumn(
                 MovieHorizontalItem(
                     modifier = Modifier.animateItemPlacement(),
                     movie = movie,
-                    onRowClick = {onMovieClick(it)}
+                    onRowClick = {id,title-> onMovieClick(id,title)}
                 )
             }
         }
@@ -99,7 +107,7 @@ fun MovieHorizontalLazyColumn(
 fun MovieHorizontalItem(
     modifier: Modifier = Modifier,
     movie: DomainMovieModel,
-    onRowClick: (Int)-> Unit,
+    onRowClick: (Int, String)-> Unit,
 ){
     Box(
         modifier = modifier
@@ -115,7 +123,7 @@ fun MovieHorizontalItem(
                 color = MaterialTheme.colorScheme.inverseOnSurface
             )
             .clip(shape = MaterialTheme.shapes.medium)
-            .clickable { onRowClick(movie.id) }
+            .clickable { onRowClick(movie.id,movie.title) }
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
 
@@ -272,6 +280,23 @@ fun MovieHorizontalItemShimmer(
 
 
 
+@Composable
+fun NoResultFound(){
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background),
+        contentAlignment = Alignment.Center
+    ){
+        Text(
+            text = stringResource(id = R.string.nothing_found),
+            style = MaterialTheme.typography.titleLarge
+        )
+    }
+}
+
+
+
 
 @DarkAndLightPreview
 @Composable
@@ -279,7 +304,7 @@ private fun Preview(){
     AppTheme() {
         MovieHorizontalItem(
             movie = sampleMovie1,
-            onRowClick = {}
+            onRowClick = {a,b->}
         )
     }
 }

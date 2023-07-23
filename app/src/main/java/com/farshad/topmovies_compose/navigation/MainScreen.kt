@@ -58,9 +58,9 @@ fun MainScreen(navHostController: NavHostController) {
 
     var showBottomAndTopBar by rememberSaveable { mutableStateOf(true) }
     val navBackStackEntry by navHostController.currentBackStackEntryAsState()
-    var topBarPadding by remember { mutableStateOf(70.dp) }
+    var topBarPadding by remember { mutableStateOf(60.dp) }
 
-    topBarPadding = if (navBackStackEntry?.destination?.route == SEARCH_SCREEN) 0.dp else 70.dp
+    topBarPadding = if (navBackStackEntry?.destination?.route == SEARCH_SCREEN) 0.dp else 60.dp
 
     showBottomAndTopBar =
         when (navBackStackEntry?.destination?.route) {
@@ -215,8 +215,7 @@ fun MyTopBar(
 
     Box(
         modifier = modifier
-            .padding(top = 12.dp)
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = 8.dp, vertical = 4.dp)
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f),
