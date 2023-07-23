@@ -78,5 +78,7 @@
     <string name="writer">نویسنده</string>
     <string name="awards">جایزه ها</string>
     <string name="similar_movies">فیلم های مشابه</string>
+    <string name="char_limited">ورودی بیش از حد مجاز</string>
+    <string name="can_not_be_empty">لطفا فیلد را پر کنید</string>
 
 </resources>

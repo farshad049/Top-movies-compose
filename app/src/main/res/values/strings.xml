@@ -77,6 +77,8 @@
     <string name="writer">writer</string>
     <string name="awards">Awards</string>
     <string name="similar_movies">Similar movies</string>
+    <string name="char_limited">input too long</string>
+    <string name="can_not_be_empty">can\'t be empty</string>
 
 
 </resources>
