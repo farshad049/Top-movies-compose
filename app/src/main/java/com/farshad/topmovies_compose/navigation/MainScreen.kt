@@ -27,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,12 +43,14 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.farshad.topmovies_compose.R
+import com.farshad.topmovies_compose.data.dataStore.DataStoreViewModel
 import com.farshad.topmovies_compose.navigation.NavigationConstants.SEARCH_SCREEN
 import com.farshad.topmovies_compose.ui.screnns.common.MovieHorizontalItemShimmer
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
@@ -91,13 +94,26 @@ fun MainScreen(navHostController: NavHostController) {
 @Composable
 fun BottomBar(
     modifier: Modifier= Modifier,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    dataStoreViewModel: DataStoreViewModel= hiltViewModel()
 ) {
 
-    val pages = setOf(
-        Screens.Dashboard,
-        Screens.MovieList
-    )
+    val isLoggedIn by dataStoreViewModel.isLoggedIn.collectAsState(initial = false)
+
+    val pages =
+        if (isLoggedIn){
+            setOf(
+                Screens.Dashboard,
+                Screens.MovieList
+            )
+        }else{
+            setOf(
+                Screens.Dashboard,
+                Screens.MovieList,
+                Screens.Register
+            )
+        }
+
 
     val navBackStackEntry by navHostController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination

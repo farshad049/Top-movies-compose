@@ -1,9 +1,9 @@
-package com.farshad.moviesAppCompose.data.repository
+package com.farshad.topmovies_compose.data.repository
 
 
-import com.farshad.topmovies_compose.data.Authentication.TokenManager
-import com.farshad.moviesAppCompose.data.model.network.RegisterPostBody
-import com.farshad.moviesAppCompose.data.model.network.UserRegisteredModel
+import com.farshad.topmovies_compose.data.dataStore.TokenManager1
+import com.farshad.topmovies_compose.data.model.network.RegisterPostBody
+import com.farshad.topmovies_compose.data.model.network.UserRegisteredModel
 import com.farshad.topmovies_compose.data.remote.ApiClient
 import com.farshad.topmovies_compose.ui.screnns.login.model.LoginResponseModel
 import com.farshad.topmovies_compose.ui.screnns.register.model.RegisterResponseModel
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class UserRepository @Inject constructor(
     private val apiClient: ApiClient,
-    private val tokenManager: TokenManager
+    private val tokenManager: TokenManager1
     ) {
 
 

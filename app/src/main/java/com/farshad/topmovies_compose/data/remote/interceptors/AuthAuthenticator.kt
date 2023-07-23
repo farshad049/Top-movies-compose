@@ -1,36 +1,45 @@
-package com.farshad.topmovies_compose.data.Authentication
+package com.farshad.topmovies_compose.data.remote.interceptors
 
-import com.farshad.moviesAppCompose.data.model.network.UserAuthModel
+import android.content.Context
 import com.farshad.moviesAppCompose.data.remote.AuthService
+import com.farshad.topmovies_compose.data.dataStore.TokenManager1
+import com.farshad.topmovies_compose.data.model.network.UserAuthModel
 import com.farshad.topmovies_compose.util.Constants.BASE_URL
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import okhttp3.*
+import okhttp3.Authenticator
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import okhttp3.Route
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Inject
 
-class AuthAuthenticator @Inject constructor() : Authenticator {
+class AuthAuthenticator @Inject constructor(
+    @ApplicationContext val context: Context
+) : Authenticator {
 
-    @Inject lateinit var tokenManager: TokenManager
+    private val tokenManager= TokenManager1(context)
 
     override fun authenticate(route: Route?, response: Response): Request? {
 
 
-        return runBlocking {
+        return runBlocking(Dispatchers.IO) {
 
-            val refreshToken=tokenManager.getRefreshToken()
-            val refreshTokenB:RequestBody= refreshToken?.toRequestBody() ?: "".toRequestBody()
+            val refreshToken=tokenManager.getRefreshToken.first()
+            val refreshTokenB:RequestBody= refreshToken.toRequestBody()
             val grantTypeB:RequestBody= "refresh_token".toRequestBody()
 
             val newAccessToken = getUpdatedToken(refreshTokenB,grantTypeB)
 
             if (!newAccessToken.isSuccessful){
-                tokenManager.clearSharedPref()
-              //  val intent= Intent(context, MainActivity::class.java)
-              //  intent.flags = FLAG_ACTIVITY_NEW_TASK
-             //   context.startActivity(intent)
+                tokenManager.deleteToken()
             }else{
                 tokenManager.saveToken(newAccessToken.body()) // save new access_token for next call
             }
@@ -60,11 +69,6 @@ class AuthAuthenticator @Inject constructor() : Authenticator {
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
 
-
-//        val service :AuthService by lazy{
-//            retrofit.create(AuthService::class.java) }
-//        val apiAuth=ApiAuth(service)
-//        return apiAuth.safeRefreshTokenFromApi(refreshToken,grantType)
 
         val service=retrofit.create(AuthService::class.java)
         return service.refreshTokenFromApi(refreshToken,grantType)

@@ -1,10 +1,10 @@
 package com.farshad.topmovies_compose.data.repository
 
-import com.farshad.topmovies_compose.data.db.Dao.FavoriteMovieDao
-import com.farshad.topmovies_compose.data.db.Dao.MovieSearchHistoryDao
-import com.farshad.topmovies_compose.data.db.Entity.FavoriteMovieEntity
-import com.farshad.topmovies_compose.data.db.Entity.SearchHistoryEntity
-import com.farshad.topmovies_compose.data.db.Entity.SearchHistoryEntityWithoutId
+import com.farshad.topmovies_compose.data.roomDatabase.Dao.FavoriteMovieDao
+import com.farshad.topmovies_compose.data.roomDatabase.Dao.MovieSearchHistoryDao
+import com.farshad.topmovies_compose.data.roomDatabase.Entity.FavoriteMovieEntity
+import com.farshad.topmovies_compose.data.roomDatabase.Entity.SearchHistoryEntity
+import com.farshad.topmovies_compose.data.roomDatabase.Entity.SearchHistoryEntityWithoutId
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

@@ -1,7 +1,7 @@
-package com.farshad.topmovies_compose.data.db.Dao
+package com.farshad.topmovies_compose.data.roomDatabase.Dao
 
 import androidx.room.*
-import com.farshad.topmovies_compose.data.db.Entity.FavoriteMovieEntity
+import com.farshad.topmovies_compose.data.roomDatabase.Entity.FavoriteMovieEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -3,14 +3,17 @@ package com.farshad.topmovies_compose.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.LocalMovies
+import androidx.compose.material.icons.rounded.Login
 import androidx.compose.material.icons.rounded.Movie
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.farshad.topmovies_compose.navigation.NavigationConstants.DASHBOARD_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.DETAIL_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.Filter_SCREEN
+import com.farshad.topmovies_compose.navigation.NavigationConstants.LOGIN_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.MOVIE_BY_GENRE_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.MOVIE_ID
 import com.farshad.topmovies_compose.navigation.NavigationConstants.MOVIE_LIST_SCREEN
+import com.farshad.topmovies_compose.navigation.NavigationConstants.REGISTER_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.SEARCH_SCREEN
 
 sealed class Screens(
@@ -43,6 +46,17 @@ sealed class Screens(
         icon = null,
         route = SEARCH_SCREEN
         )
+
+
+    object Register: Screens(
+        icon= Icons.Rounded.Login,
+        route = REGISTER_SCREEN
+    )
+
+    object Login: Screens(
+        icon = null,
+        route = LOGIN_SCREEN
+    )
 
 
     object Detail: Screens(

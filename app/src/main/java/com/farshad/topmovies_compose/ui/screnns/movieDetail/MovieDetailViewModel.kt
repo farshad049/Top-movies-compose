@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.moviesAppCompose.data.model.ui.Resource
 import com.farshad.moviesAppCompose.data.repository.MovieDetailRepository
-import com.farshad.topmovies_compose.data.db.Entity.FavoriteMovieEntity
+import com.farshad.topmovies_compose.data.roomDatabase.Entity.FavoriteMovieEntity
 import com.farshad.topmovies_compose.data.repository.RoomRepository
 import com.farshad.topmovies_compose.ui.screnns.movieDetail.model.UiMovieDetailModel
 import dagger.hilt.android.lifecycle.HiltViewModel

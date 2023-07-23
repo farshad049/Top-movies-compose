@@ -34,9 +34,14 @@ fun SetupNavGraph(navController: NavHostController){
 
             movieListNavGraph(navController= navController, filterViewModel)
 
+            registerNavGraph(navController= navController)
+
+
+
             composable(route = Screens.Search.route){
                 SearchScreenWithViewModel(navController = navController)
             }
+
 
 
             composable(

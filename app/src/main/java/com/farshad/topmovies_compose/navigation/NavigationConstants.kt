@@ -6,6 +6,7 @@ object NavigationConstants {
     const val ROOT_GRAPH = "root_graph"
     const val DASHBOARD_GRAPH = "dashboard_graph"
     const val MOVIE_LIST_GRAPH= "movie_list_graph"
+    const val REGISTER_GRAPH= "register_graph"
 
 
     //screens name
@@ -15,6 +16,8 @@ object NavigationConstants {
     const val MOVIE_LIST_SCREEN = "movie_list_screen"
     const val Filter_SCREEN= "filter_screen"
     const val SEARCH_SCREEN= "search_screen"
+    const val REGISTER_SCREEN= "register_screen"
+    const val LOGIN_SCREEN= "login_screen"
 
 
     //nav arg names

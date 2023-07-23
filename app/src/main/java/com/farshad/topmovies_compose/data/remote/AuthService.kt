@@ -1,6 +1,6 @@
 package com.farshad.moviesAppCompose.data.remote
 
-import com.farshad.moviesAppCompose.data.model.network.UserAuthModel
+import com.farshad.topmovies_compose.data.model.network.UserAuthModel
 import com.farshad.topmovies_compose.data.remote.MovieService
 import okhttp3.RequestBody
 import retrofit2.Response

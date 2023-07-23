@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.topmovies_compose.data.model.mapper.MovieMapper
-import com.farshad.moviesAppCompose.data.model.network.PagingModel
+import com.farshad.topmovies_compose.data.model.network.PagingModel
 import com.farshad.topmovies_compose.data.remote.ApiClient
 import com.farshad.moviesAppCompose.data.remote.SimpleResponse
 

@@ -1,7 +1,7 @@
 package com.farshad.topmovies_compose.data.model.mapper
 
 import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
-import com.farshad.moviesAppCompose.data.model.network.NetworkMovieModel
+import com.farshad.topmovies_compose.data.model.network.NetworkMovieModel
 import javax.inject.Inject
 
 class MovieMapper @Inject constructor() {

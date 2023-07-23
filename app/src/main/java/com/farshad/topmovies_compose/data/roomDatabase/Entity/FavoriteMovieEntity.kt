@@ -1,4 +1,4 @@
-package com.farshad.topmovies_compose.data.db.Entity
+package com.farshad.topmovies_compose.data.roomDatabase.Entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

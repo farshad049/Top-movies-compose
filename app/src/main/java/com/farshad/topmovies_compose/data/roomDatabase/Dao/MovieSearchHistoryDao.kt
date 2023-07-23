@@ -1,8 +1,8 @@
-package com.farshad.topmovies_compose.data.db.Dao
+package com.farshad.topmovies_compose.data.roomDatabase.Dao
 
 import androidx.room.*
-import com.farshad.topmovies_compose.data.db.Entity.SearchHistoryEntity
-import com.farshad.topmovies_compose.data.db.Entity.SearchHistoryEntityWithoutId
+import com.farshad.topmovies_compose.data.roomDatabase.Entity.SearchHistoryEntity
+import com.farshad.topmovies_compose.data.roomDatabase.Entity.SearchHistoryEntityWithoutId
 import kotlinx.coroutines.flow.Flow
 
 @Dao

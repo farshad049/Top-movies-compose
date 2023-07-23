@@ -2,7 +2,7 @@ package com.farshad.topmovies_compose.data.Authentication
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.farshad.moviesAppCompose.data.model.network.UserAuthModel
+import com.farshad.topmovies_compose.data.model.network.UserAuthModel
 import com.farshad.topmovies_compose.util.Constants.IS_LOGGED_IN
 import com.farshad.topmovies_compose.util.Constants.PREFS_TOKEN_FILE
 import com.farshad.topmovies_compose.util.Constants.USER_REFRESH_TOKEN

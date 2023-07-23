@@ -2,8 +2,8 @@ package com.farshad.topmovies_compose.ui.screnns.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.farshad.topmovies_compose.data.db.Entity.SearchHistoryEntity
-import com.farshad.topmovies_compose.data.db.Entity.SearchHistoryEntityWithoutId
+import com.farshad.topmovies_compose.data.roomDatabase.Entity.SearchHistoryEntity
+import com.farshad.topmovies_compose.data.roomDatabase.Entity.SearchHistoryEntityWithoutId
 import com.farshad.topmovies_compose.data.repository.RoomRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

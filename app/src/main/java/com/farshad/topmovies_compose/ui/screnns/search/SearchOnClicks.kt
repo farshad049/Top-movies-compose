@@ -1,7 +1,7 @@
 package com.farshad.topmovies_compose.ui.screnns.search
 
 import androidx.navigation.NavHostController
-import com.farshad.topmovies_compose.data.db.Entity.SearchHistoryEntity
+import com.farshad.topmovies_compose.data.roomDatabase.Entity.SearchHistoryEntity
 import com.farshad.topmovies_compose.navigation.Screens
 
 class SearchOnClicks(

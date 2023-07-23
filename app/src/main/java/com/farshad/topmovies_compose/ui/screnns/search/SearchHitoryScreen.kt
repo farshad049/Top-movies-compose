@@ -1,7 +1,6 @@
 package com.farshad.topmovies_compose.ui.screnns.search
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.farshad.topmovies_compose.R
-import com.farshad.topmovies_compose.data.db.Entity.SearchHistoryEntityWithoutId
+import com.farshad.topmovies_compose.data.roomDatabase.Entity.SearchHistoryEntityWithoutId
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
 

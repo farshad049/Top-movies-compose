@@ -1,6 +1,6 @@
 package com.farshad.topmovies_compose.ui.screnns.login.model
 
-import com.farshad.moviesAppCompose.data.model.network.UserAuthModel
+import com.farshad.topmovies_compose.data.model.network.UserAuthModel
 
 
 sealed interface LoginResponseModel {

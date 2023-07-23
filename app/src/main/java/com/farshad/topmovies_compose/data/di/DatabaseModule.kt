@@ -2,9 +2,9 @@ package com.farshad.moviesAppCompose.data.di
 
 import android.content.Context
 import androidx.room.Room
-import com.farshad.topmovies_compose.data.db.Dao.FavoriteMovieDao
-import com.farshad.topmovies_compose.data.db.Dao.MovieSearchHistoryDao
-import com.farshad.topmovies_compose.data.db.MovieDatabase
+import com.farshad.topmovies_compose.data.roomDatabase.Dao.FavoriteMovieDao
+import com.farshad.topmovies_compose.data.roomDatabase.Dao.MovieSearchHistoryDao
+import com.farshad.topmovies_compose.data.roomDatabase.MovieDatabase
 import com.farshad.topmovies_compose.util.Constants.DATABASE_NAME
 import dagger.Module
 import dagger.Provides
@@ -21,8 +21,7 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun providesDatabase(
-        @ApplicationContext context : Context): MovieDatabase {
+    fun providesDatabase(@ApplicationContext context : Context): MovieDatabase {
       return Room.databaseBuilder(
           context ,
           MovieDatabase::class.java ,
