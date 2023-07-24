@@ -80,5 +80,8 @@
     <string name="similar_movies">فیلم های مشابه</string>
     <string name="char_limited">ورودی بیش از حد مجاز</string>
     <string name="can_not_be_empty">لطفا فیلد را پر کنید</string>
+    <string name="please_enter_a_valid_email">لفطا یک ایمیل معتبر وارد کنید</string>
+    <string name="please_enter_a_valid_username">لفطا یک نام معتبر وارد کنید</string>
+    <string name="please_enter_a_valid_password">لفطا یک پسوورد معتبر وارد کنید</string>
 
 </resources>

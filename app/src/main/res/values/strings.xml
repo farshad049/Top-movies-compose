@@ -79,6 +79,10 @@
     <string name="similar_movies">Similar movies</string>
     <string name="char_limited">input too long</string>
     <string name="can_not_be_empty">can\'t be empty</string>
+    <string name="please_enter_a_valid_email">please enter a valid email</string>
+    <string name="please_enter_a_valid_username">please enter a valid username</string>
+    <string name="please_enter_a_valid_password">please enter a valid password</string>
+
 
 
 </resources>

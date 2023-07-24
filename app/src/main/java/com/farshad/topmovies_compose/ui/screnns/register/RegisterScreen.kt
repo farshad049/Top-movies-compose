@@ -4,53 +4,51 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.farshad.topmovies_compose.R
 import com.farshad.topmovies_compose.navigation.Screens
+import com.farshad.topmovies_compose.ui.screnns.common.LottieHeader
 import com.farshad.topmovies_compose.ui.screnns.common.MyButton
+import com.farshad.topmovies_compose.ui.screnns.common.MyTextField
+import com.farshad.topmovies_compose.ui.screnns.login.model.LoginResponseModel
 import com.farshad.topmovies_compose.ui.screnns.register.model.RegisterFieldValidationModel
 import com.farshad.topmovies_compose.ui.screnns.register.model.RegisterResponseModel
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
+import com.stevdzasan.messagebar.ContentWithMessageBar
+import com.stevdzasan.messagebar.rememberMessageBarState
 
 @Composable
 fun RegisterScreenWithViewModel(
@@ -58,31 +56,38 @@ fun RegisterScreenWithViewModel(
     registerViewModel: RegisterViewModel= hiltViewModel()
 ) {
 
+    val context = LocalContext.current
+
     val validation by registerViewModel.validationFlow.collectAsStateWithLifecycle(initialValue = RegisterFieldValidationModel())
 
     val registerResponse by registerViewModel.registerUserFlow.collectAsStateWithLifecycle(initialValue = RegisterResponseModel.Loading)
 
-    RegisterScreen(
-        error = validation,
-        onButtonClick = {userName, email, password ->
-            registerViewModel.validate(
-                userName = userName,
-                email= email,
-                password = password,
-            )
-            Log.e("userName",userName)
-            Log.e("email",email)
-            Log.e("password",password)
-        }
-    )
+
+        RegisterScreen(
+            error = validation,
+            onButtonClick = { userName, email, password ->
+                registerViewModel.validate(
+                    userName = userName,
+                    email = email,
+                    password = password,
+                )
+            },
+            onLogonTxtClick = { navController.navigate(Screens.Login.route) }
+        )
+
 
 
     when(registerResponse){
         is RegisterResponseModel.Success ->{
-            navController.navigate(Screens.Login.route)
+            LaunchedEffect(key1 = registerResponse){
+                navController.navigate(Screens.Login.route)
+            }
         }
         is RegisterResponseModel.Error ->{
-            Toast.makeText(LocalContext.current, (registerResponse as RegisterResponseModel.Error).error, Toast.LENGTH_SHORT).show()
+            LaunchedEffect(key1 = registerResponse){
+                Toast.makeText(context, (registerResponse as RegisterResponseModel.Error).error, Toast.LENGTH_SHORT).show()
+            }
+
         }
     }
 
@@ -93,6 +98,7 @@ fun RegisterScreenWithViewModel(
 fun RegisterScreen(
     error: RegisterFieldValidationModel,
     onButtonClick: (String, String, String) -> Unit,
+    onLogonTxtClick: () -> Unit
 ) {
     var userName by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
@@ -104,14 +110,24 @@ fun RegisterScreen(
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
     ) {
+
+        val focusManager = LocalFocusManager.current
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .pointerInput(Unit) {
+                    detectTapGestures(onTap = {
+                        focusManager.clearFocus()
+                    })
+                }
+                .verticalScroll(rememberScrollState())
+                ,
+            horizontalAlignment = Alignment.CenterHorizontally,
+
         ) {
-            
-            RegisterHeader()
+
+            LottieHeader(lottieCompositionSpec = LottieCompositionSpec.RawRes(R.raw.register))
 
             Spacer(modifier = Modifier.height(28.dp))
 
@@ -150,6 +166,27 @@ fun RegisterScreen(
                 onClick = {onButtonClick(userName,email,password)}
             )
 
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(id = R.string.already_have_an_account),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    modifier = Modifier
+                        .clickable { onLogonTxtClick() },
+                    text = stringResource(id = R.string.login),
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+
+            Spacer(modifier = Modifier.height(56.dp))
+
 
 
 
@@ -158,104 +195,9 @@ fun RegisterScreen(
 }
 
 
-@Composable
-fun RegisterHeader() {
-    val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.register))
-    var isPlaying by remember { mutableStateOf(true) }
-    val progress by animateLottieCompositionAsState(
-        composition = composition,
-        isPlaying = isPlaying
-    )
-
-    LaunchedEffect(key1 = progress) {
-        if (progress == 0f) isPlaying = true
-        if (progress == 1f) isPlaying = false
-    }
 
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
-                shape = MaterialTheme.shapes.medium
-            )
-            .height(300.dp)
-            .clickable { isPlaying = true },
-        contentAlignment = Alignment.Center
-    ) {
 
-        LottieAnimation(
-            modifier = Modifier.size(250.dp),
-            composition = composition,
-            progress = { progress }
-        )
-
-
-    }
-}
-
-@Composable
-fun MyTextField(
-    label: String,
-    valueOfTxtField: (String) -> Unit,
-    error: String? = null
-) {
-
-    var text by rememberSaveable { mutableStateOf("") }
-
-
-    OutlinedTextField(
-        value = text,
-        onValueChange = {
-            text = it
-            valueOfTxtField(text)
-        },
-        placeholder = {
-            Text(
-                text = label,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        },
-        label = {
-            Text(
-                text = label,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        },
-        singleLine = true,
-        isError = error != null,
-        supportingText = {
-            if (error != null) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = error,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-        },
-        trailingIcon = {
-            if (error != null)
-                Icon(Icons.Filled.Error, "error", tint = MaterialTheme.colorScheme.error)
-        },
-        keyboardActions = KeyboardActions {
-            valueOfTxtField(text)
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Done
-        ),
-        colors = OutlinedTextFieldDefaults.colors(
-            cursorColor = MaterialTheme.colorScheme.primary,
-            focusedTextColor = MaterialTheme.colorScheme.onBackground,
-            unfocusedTextColor = MaterialTheme.colorScheme.onBackground
-        )
-
-
-    )
-
-
-}
 
 
 
@@ -269,6 +211,7 @@ private fun Preview() {
         RegisterScreen(
             error = RegisterFieldValidationModel(),
             onButtonClick = {a,b,c->},
+            onLogonTxtClick = {}
 
         )
     }

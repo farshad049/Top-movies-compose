@@ -143,10 +143,11 @@ fun RowScope.AddItem(
                 contentDescription = "navigation icon"
             )
         },
+        selectedContentColor= MaterialTheme.colorScheme.onBackground,
         selected = currentDestination?.hierarchy?.any() {
             it.route == screen.route
         } == true,
-        unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled), // toma make the unSelected Item even less visible
+        unselectedContentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f), // toma make the unSelected Item even less visible
         onClick = {
             navHostController.navigate(screen.route) {
                 popUpTo(navHostController.graph.findStartDestination().id) // get back to home screen when press back bottom
