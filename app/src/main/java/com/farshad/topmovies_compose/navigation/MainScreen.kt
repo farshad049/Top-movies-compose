@@ -104,7 +104,8 @@ fun BottomBar(
         if (isLoggedIn){
             setOf(
                 Screens.Dashboard,
-                Screens.MovieList
+                Screens.MovieList,
+                Screens.Submit
             )
         }else{
             setOf(
@@ -166,8 +167,9 @@ fun MyBottomNavigation(
 ) {
     val backGroundColor=Brush.verticalGradient(
         colors = listOf(
-            Color.Transparent ,
-            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f)
+            Color.Transparent,
+            Color.Gray.copy(alpha = 0.5f) ,
+
         )
     )
 
@@ -225,7 +227,7 @@ fun MyTopBar(
     val backgroundColor= Brush.verticalGradient(
         colors = listOf(
             Color.Transparent,
-            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f),
+            Color.Gray.copy(alpha = 0.1f),
             Color.Transparent,
         )
     )
@@ -262,7 +264,7 @@ fun MyTopBar(
             Icon(
                 imageVector = Icons.Rounded.Search,
                 contentDescription ="",
-                tint = MaterialTheme.colorScheme.onBackground
+                tint = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(

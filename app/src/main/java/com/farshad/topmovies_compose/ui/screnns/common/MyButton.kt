@@ -1,6 +1,5 @@
 package com.farshad.topmovies_compose.ui.screnns.common
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Button
@@ -9,8 +8,6 @@ import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import com.farshad.topmovies_compose.util.DarkAndLightPreview

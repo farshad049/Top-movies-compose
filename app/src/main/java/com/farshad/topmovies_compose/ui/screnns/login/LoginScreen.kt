@@ -48,6 +48,7 @@ import com.farshad.topmovies_compose.R
 import com.farshad.topmovies_compose.ui.screnns.common.LottieHeader
 import com.farshad.topmovies_compose.ui.screnns.common.MyButton
 import com.farshad.topmovies_compose.ui.screnns.common.MyTextField
+import com.farshad.topmovies_compose.ui.screnns.common.PasswordTextField
 import com.farshad.topmovies_compose.ui.screnns.login.model.LoginFieldValidationModel
 import com.farshad.topmovies_compose.ui.screnns.login.model.LoginResponseModel
 import com.farshad.topmovies_compose.ui.theme.AppTheme
@@ -175,87 +176,7 @@ fun LoginScreen(
 }
 
 
-@Composable
-fun PasswordTextField(
-    label: String,
-    valueOfTxtField: (String) -> Unit,
-    error: String? = null
-) {
 
-    var text by rememberSaveable { mutableStateOf("") }
-
-    var showPassword by remember { mutableStateOf(false) }
-
-
-    OutlinedTextField(
-        value = text,
-        onValueChange = {
-            text = it
-            valueOfTxtField(text)
-        },
-        visualTransformation = if (showPassword) {
-            VisualTransformation.None
-        } else {
-            PasswordVisualTransformation()
-        },
-        placeholder = {
-            Text(
-                text = label,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        },
-        label = {
-            Text(
-                text = label,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        },
-        singleLine = true,
-        isError = error != null,
-        supportingText = {
-            if (error != null) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = error,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-        },
-        trailingIcon = {
-            if (error != null) Icon(
-                Icons.Filled.Error,
-                "error",
-                tint = MaterialTheme.colorScheme.error
-            )
-
-            if (error == null){
-                IconButton(
-                    onClick = { showPassword = true},
-                ) {
-                    Icon(imageVector = Icons.Filled.Visibility, contentDescription = null)
-                }
-            }
-
-
-        },
-        keyboardActions = KeyboardActions {
-            valueOfTxtField(text)
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Done
-        ),
-        colors = OutlinedTextFieldDefaults.colors(
-            cursorColor = MaterialTheme.colorScheme.primary,
-            focusedTextColor = MaterialTheme.colorScheme.onBackground,
-            unfocusedTextColor = MaterialTheme.colorScheme.onBackground
-        )
-
-
-    )
-
-
-}
 
 
 @DarkAndLightPreview

@@ -126,7 +126,7 @@ fun SearchWidget(
     val backgroundColor= Brush.verticalGradient(
         colors = listOf(
             Color.Transparent,
-            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f),
+            Color.Gray.copy(alpha = 0.1f),
             Color.Transparent,
         )
     )

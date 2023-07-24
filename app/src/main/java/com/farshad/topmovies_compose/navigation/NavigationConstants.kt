@@ -18,6 +18,7 @@ object NavigationConstants {
     const val SEARCH_SCREEN= "search_screen"
     const val REGISTER_SCREEN= "register_screen"
     const val LOGIN_SCREEN= "login_screen"
+    const val SUBMIT_SCREEN= "submit_screen"
 
 
     //nav arg names

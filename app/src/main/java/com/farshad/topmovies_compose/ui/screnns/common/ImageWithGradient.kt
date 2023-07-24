@@ -58,7 +58,7 @@ fun ImageWithGradient(
                 )
                 .background(
                     shape = MaterialTheme.shapes.medium,
-                    color = MaterialTheme.colorScheme.outline
+                    color = Color.Gray
                 )
                 .clip(MaterialTheme.shapes.medium)
                 .drawWithCache {

@@ -1,4 +1,4 @@
-package com.farshad.topmovies_compose.data.model.domain
+package com.farshad.topmovies_compose.ui.screnns.submitMovie.model
 
 data class UploadMovieModel(
     var country: String = "",

@@ -14,6 +14,7 @@ import com.farshad.topmovies_compose.ui.screnns.filter.FilterViewModel
 import com.farshad.topmovies_compose.ui.screnns.movieDetail.DetailScreenWithViewModel
 import com.farshad.topmovies_compose.ui.screnns.search.SearchScreen
 import com.farshad.topmovies_compose.ui.screnns.search.SearchScreenWithViewModel
+import com.farshad.topmovies_compose.ui.screnns.submitMovie.SubmitScreenWithViewModel
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -40,6 +41,10 @@ fun SetupNavGraph(navController: NavHostController){
 
             composable(route = Screens.Search.route){
                 SearchScreenWithViewModel(navController = navController)
+            }
+
+            composable(route = Screens.Submit.route){
+                SubmitScreenWithViewModel(navController = navController)
             }
 
 
