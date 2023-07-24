@@ -2,7 +2,7 @@ package com.farshad.topmovies_compose.data.repository
 
 import com.farshad.topmovies_compose.data.remote.ApiClient
 import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.SubmitResponseModel
-import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.UploadMovieModel
+import com.farshad.topmovies_compose.data.model.domain.UploadMovieModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

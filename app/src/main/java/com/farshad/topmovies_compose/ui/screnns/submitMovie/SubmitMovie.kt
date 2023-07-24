@@ -15,7 +15,6 @@ import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,12 +24,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.farshad.topmovies_compose.R
 import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.SubmitFieldValidationModel
-import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.SubmitResponseModel
-import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.UploadMovieModel
+import com.farshad.topmovies_compose.data.model.domain.UploadMovieModel
+import com.farshad.topmovies_compose.data.model.domain.UploadMovieMultipart
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -42,40 +41,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun SubmitScreenWithViewModel(
     navController: NavHostController,
-    submitBase64ViewModel: SubmitBase64ViewModel= hiltViewModel()
 ) {
-
-    val validation by submitBase64ViewModel.validationFlow.collectAsStateWithLifecycle(initialValue = SubmitFieldValidationModel())
-
-    val submitResponse by submitBase64ViewModel.submitMovieBase64Flow.collectAsStateWithLifecycle(initialValue = SubmitResponseModel.Loading)
-
-    SubmitScreen(
-        error = validation,
-        onSubmitButtonClick = {
-            submitBase64ViewModel.validateBase64(
-                title = it.title,
-                imdb_id = it.imdb_id,
-                country = it.country,
-                year = it.year.toString(),
-                poster = it.poster
-            )
-        }
-    )
-
-
-
-    when(submitResponse){
-
-        is SubmitResponseModel.Success ->{
-
-        }
-
-        is SubmitResponseModel.Error -> {
-
-        }
-
-    }
-
+    SubmitScreen(navController = navController)
 }
 
 
@@ -84,8 +51,7 @@ fun SubmitScreenWithViewModel(
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SubmitScreen(
-    error: SubmitFieldValidationModel,
-    onSubmitButtonClick: (UploadMovieModel) -> Unit
+    navController: NavHostController
 ) {
 
     val items = listOf(
@@ -93,7 +59,7 @@ fun SubmitScreen(
         stringResource(id = R.string.upload_multipart)
     )
 
-    val pagerState = rememberPagerState(initialPage = 2)
+    val pagerState = rememberPagerState(initialPage = 0)
     val coroutineScope = rememberCoroutineScope()
 
     val tabBackGroundColorSelected= Brush.verticalGradient(
@@ -186,14 +152,10 @@ fun SubmitScreen(
 
                     when (items[currentPage]){
                         items[0] ->{
-                            SubmitMovieBase64(
-                                error = error,
-                                onSubmitButtonClick = onSubmitButtonClick,
-                                onImageClick = {}
-                            )
+                            SubmitMovieBase64ScreenWithViewModel(navController = navController)
                         }
                         items[1] ->{
-
+                            SubmitMovieMultipartWithViewModel(navController= navController)
                         }
                     }
                 }
@@ -211,8 +173,7 @@ fun SubmitScreen(
 private fun Preview() {
     AppTheme() {
         SubmitScreen(
-            error = SubmitFieldValidationModel(),
-            onSubmitButtonClick = {}
+          navController = rememberNavController()
         )
     }
 }

@@ -1,66 +1,113 @@
-@file:JvmName("SubmitMovieKt")
+
 
 package com.farshad.topmovies_compose.ui.screnns.submitMovie
 
+import android.content.Context
+import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.farshad.topmovies_compose.R
 import com.farshad.topmovies_compose.ui.screnns.common.IntTextField
 import com.farshad.topmovies_compose.ui.screnns.common.MyButton
 import com.farshad.topmovies_compose.ui.screnns.common.MyTextField
 import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.SubmitFieldValidationModel
-import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.UploadMovieModel
+import com.farshad.topmovies_compose.data.model.domain.UploadMovieModel
+import com.farshad.topmovies_compose.navigation.Screens
+import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.SubmitResponseModel
 import com.farshad.topmovies_compose.ui.theme.AppTheme
+import com.farshad.topmovies_compose.util.Convertors
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
 
 @Composable
-fun SubmitMovieBase64(
+fun SubmitMovieBase64ScreenWithViewModel(
+    navController: NavHostController,
+    submitBase64ViewModel: SubmitBase64ViewModel= hiltViewModel(),
+){
+    val context= LocalContext.current
+
+    val base64Validation by submitBase64ViewModel.validationFlow.collectAsStateWithLifecycle(initialValue = SubmitFieldValidationModel())
+
+    val submitBase64Response by submitBase64ViewModel.submitMovieBase64Flow.collectAsStateWithLifecycle(initialValue = SubmitResponseModel.Loading)
+
+
+    SubmitMovieBase64Screen(
+        error = base64Validation,
+        onSubmitButtonClick = {
+            submitBase64ViewModel.validateBase64(
+                title = it.title,
+                imdb_id = it.imdb_id,
+                country = it.country,
+                year = it.year.toString(),
+                poster = it.poster
+            )
+        }
+    )
+
+    when(submitBase64Response){
+
+        is SubmitResponseModel.Success ->{
+            LaunchedEffect(key1 = submitBase64Response){
+                val movieId= (submitBase64Response as SubmitResponseModel.Success).data.id
+                navController.navigate(Screens.Detail.passMovieID(movieId = movieId))
+            }
+        }
+
+        is SubmitResponseModel.Error -> {
+            LaunchedEffect(key1 = submitBase64Response){
+                Toast.makeText(context,(submitBase64Response as SubmitResponseModel.Error).message, Toast.LENGTH_LONG).show()
+            }
+
+        }
+    }
+
+}
+
+
+@Composable
+fun SubmitMovieBase64Screen(
     error: SubmitFieldValidationModel,
     onSubmitButtonClick: (UploadMovieModel) -> Unit,
-    onImageClick: () -> Unit
 ) {
+
+    val context= LocalContext.current
+
+    var imageUri: Uri? by remember{ mutableStateOf(null) }
+    val photoPicker= rememberLauncherForActivityResult(
+        contract =  ActivityResultContracts.PickVisualMedia()
+    ){imageUri = it}
 
     var movieTitle by rememberSaveable { mutableStateOf("") }
     var imdbId by rememberSaveable { mutableStateOf("") }
     var country by rememberSaveable { mutableStateOf("") }
-    var year by rememberSaveable { mutableIntStateOf(0) }
+    var year by rememberSaveable { mutableStateOf("") }
     var director by rememberSaveable { mutableStateOf("") }
     var imdbRating by rememberSaveable { mutableStateOf("") }
     var imdbVoting by rememberSaveable { mutableStateOf("") }
@@ -82,8 +129,14 @@ fun SubmitMovieBase64(
             Spacer(modifier = Modifier.height(28.dp))
 
             SubmitImage(
-                imageUrl = "",
-                onClick = onImageClick
+                imageUri = imageUri,
+                onClick = {
+                    photoPicker.launch(
+                        PickVisualMediaRequest(
+                            ActivityResultContracts.PickVisualMedia.ImageOnly
+                        )
+                    )
+                }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -140,95 +193,45 @@ fun SubmitMovieBase64(
                                     title = movieTitle,
                                     imdb_id = imdbId,
                                     country = country,
-                                    year = year,
+                                    year = year.toInt(),
                                     director = director,
                                     imdb_rating = imdbRating,
-                                    imdb_votes = imdbVoting
+                                    imdb_votes = imdbVoting,
+                                    poster = convertUriToString(context = context, uri = imageUri )
                                 )
                     )
                 }
             )
 
+            Spacer(modifier = Modifier.height(56.dp))
+
         }
     }
 }
 
 
-@Composable
-fun SubmitImage(
-    modifier: Modifier = Modifier,
-    imageUrl: String ="",
-    width: Dp = 200.dp,
-    height: Dp = 200.dp,
-    onClick: ()-> Unit
-){
-    Box(modifier = modifier
-        .width(width)
-        .height(height),
-        contentAlignment = Alignment.Center
-    ) {
-        AsyncImage(
-            modifier = Modifier
-                .fillMaxSize()
-                .border(
-                    width = 1.dp,
-                    shape = MaterialTheme.shapes.medium,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                .shadow(
-                    elevation = 6.dp, spotColor = MaterialTheme.colorScheme.onBackground,
-                    shape = MaterialTheme.shapes.medium
-                )
-                .background(
-                    shape = MaterialTheme.shapes.medium,
-                    color = Color.Gray
-                )
-                .clip(MaterialTheme.shapes.medium)
-                .drawWithCache {
-                    val gradient = Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, Color.Black),
-                        startY = size.height / 3,
-                        endY = size.height
-                    )
-                    onDrawWithContent {
-                        drawContent()
-                        drawRect(gradient, blendMode = BlendMode.Multiply)
-                    }
-                },
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUrl)
-                .crossfade(500)
-                .error(R.drawable.error)
-                .build(),
-            placeholder = painterResource(id = R.drawable.place_holder) ,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-        )
 
-        IconButton(
-            modifier = Modifier.fillMaxSize().align(Alignment.Center),
-            onClick = { onClick() }
-        ) {
-            Icon(
-                modifier = Modifier.size(130.dp),
-                imageVector = Icons.Rounded.Add,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
-            )
-        }
+
+
+
+
+fun convertUriToString(uri: Uri?, context: Context): String?{
+    return if (uri == null){
+        null
+    }else{
+        val bitmap= Convertors().convertUriToBitmap(context, uri)
+        return Convertors().convertBitmapTOBase64(bitmap)
     }
 }
-
 
 
 @DarkAndLightPreview
 @Composable
 private fun Preview() {
     AppTheme() {
-        SubmitMovieBase64(
+        SubmitMovieBase64Screen(
             error =  SubmitFieldValidationModel(),
-            onSubmitButtonClick = {a,b,c,d,e,f,g ->},
-            onImageClick = {}
+            onSubmitButtonClick = {UploadMovieModel ->},
         )
     }
 }

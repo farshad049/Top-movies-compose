@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.farshad.topmovies_compose.data.repository.SubmitMovieRepository
 import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.SubmitFieldValidationModel
 import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.SubmitResponseModel
-import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.UploadMovieModel
+import com.farshad.topmovies_compose.data.model.domain.UploadMovieModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -43,7 +43,7 @@ class SubmitBase64ViewModel @Inject constructor(
         imdb_id : String,
         country : String,
         year : String ,
-        poster : String = ""
+        poster : String?
     )=viewModelScope.launch{
 
         val titleB = title.trim()
@@ -91,7 +91,7 @@ class SubmitBase64ViewModel @Inject constructor(
                       imdb_id = imdbIdB ,
                       country = countryB,
                       year = yearB.toInt(),
-                      poster = poster
+                      poster = "data:image/jpeg;base64,$poster"
                   )
               )
 

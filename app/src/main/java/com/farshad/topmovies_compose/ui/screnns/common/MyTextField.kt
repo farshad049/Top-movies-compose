@@ -1,5 +1,6 @@
 package com.farshad.topmovies_compose.ui.screnns.common
 
+import android.view.KeyEvent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -16,6 +17,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 
@@ -27,9 +33,19 @@ fun MyTextField(
 ) {
 
     var text by rememberSaveable { mutableStateOf("") }
+    val focusManager = LocalFocusManager.current
 
 
     OutlinedTextField(
+        modifier = Modifier
+            .onPreviewKeyEvent {
+                if (it.key == Key.Tab && it.nativeKeyEvent.action == KeyEvent.ACTION_DOWN){
+                    focusManager.moveFocus(FocusDirection.Down)
+                    true
+                } else {
+                    false
+                }
+            },
         value = text,
         onValueChange = {
             text = it
@@ -62,12 +78,12 @@ fun MyTextField(
             if (error != null)
                 Icon(Icons.Filled.Error, "error", tint = MaterialTheme.colorScheme.error)
         },
-        keyboardActions = KeyboardActions {
-            valueOfTxtField(text)
-        },
+        keyboardActions = KeyboardActions(
+            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+        ),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Done
+            imeAction = ImeAction.Next
         ),
         colors = OutlinedTextFieldDefaults.colors(
             cursorColor = MaterialTheme.colorScheme.primary,

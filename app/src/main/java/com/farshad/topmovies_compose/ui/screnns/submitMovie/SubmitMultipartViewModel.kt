@@ -19,14 +19,15 @@ class SubmitMultipartViewModel @Inject constructor(
     private val repository: SubmitMovieRepository
 ):ViewModel() {
 
-    private val eventChannel = Channel<SubmitResponseModel>()
-    val submitFlow = eventChannel.receiveAsFlow()
+    private val _submitMovieMultipartFlow = Channel<SubmitResponseModel>()
+    val submitMovieMultipartFlow = _submitMovieMultipartFlow.receiveAsFlow()
 
 
-    private val _validationMutableLiveData= MutableStateFlow<SubmitFieldValidationModel>(
+
+    private val _validationMutableFlow= MutableStateFlow<SubmitFieldValidationModel>(
         SubmitFieldValidationModel()
     )
-    val validationLiveData = _validationMutableLiveData.asStateFlow()
+    val validationFlow = _validationMutableFlow.asStateFlow()
 
 
 
@@ -39,14 +40,14 @@ class SubmitMultipartViewModel @Inject constructor(
     ){
         viewModelScope.launch {
             val response=repository.pushMovieMultipart(poster,title,imdb_id,country,year)
-            eventChannel.send(response)
+            _submitMovieMultipartFlow.send(response)
         }
     }
 
 
 
 
-    fun validate(
+    fun validateMultipart(
         title : String,
         imdb_id : String,
         country : String,
@@ -61,27 +62,27 @@ class SubmitMultipartViewModel @Inject constructor(
 
         when{
             titleB.isEmpty() -> {
-                _validationMutableLiveData.value=
+                _validationMutableFlow.value=
                     SubmitFieldValidationModel(title = "* please enter a valid title")
                 return
             }
             imdbIdB.isEmpty() -> {
-                _validationMutableLiveData.value=
+                _validationMutableFlow.value=
                     SubmitFieldValidationModel(imdbId = "* please enter a valid IMDB ID")
                 return
             }
             countryB.isEmpty() -> {
-                _validationMutableLiveData.value =
+                _validationMutableFlow.value =
                     SubmitFieldValidationModel(country = "* please enter a valid country name")
                 return
             }
             yearB.isEmpty() && year.length < 4 -> {
-                _validationMutableLiveData.value=
+                _validationMutableFlow.value=
                     SubmitFieldValidationModel(year = "* please enter a valid year")
                 return
 
             }else ->{
-            _validationMutableLiveData.value = SubmitFieldValidationModel(
+            _validationMutableFlow.value = SubmitFieldValidationModel(
                 title = null,
                 imdbId = null,
                 country = null,

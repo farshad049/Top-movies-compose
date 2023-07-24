@@ -1,6 +1,5 @@
 package com.farshad.topmovies_compose.ui.screnns.register
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,13 +23,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,13 +38,10 @@ import com.farshad.topmovies_compose.navigation.Screens
 import com.farshad.topmovies_compose.ui.screnns.common.LottieHeader
 import com.farshad.topmovies_compose.ui.screnns.common.MyButton
 import com.farshad.topmovies_compose.ui.screnns.common.MyTextField
-import com.farshad.topmovies_compose.ui.screnns.login.model.LoginResponseModel
 import com.farshad.topmovies_compose.ui.screnns.register.model.RegisterFieldValidationModel
 import com.farshad.topmovies_compose.ui.screnns.register.model.RegisterResponseModel
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
-import com.stevdzasan.messagebar.ContentWithMessageBar
-import com.stevdzasan.messagebar.rememberMessageBarState
 
 @Composable
 fun RegisterScreenWithViewModel(
