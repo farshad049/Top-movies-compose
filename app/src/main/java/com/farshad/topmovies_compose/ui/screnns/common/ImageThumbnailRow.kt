@@ -43,19 +43,17 @@ fun ImageThumbnailRow(
         itemsIndexed(
             items = movies, key = { index, item -> item.hashCode()}
         ){index, item->
-            ListItem(
+            MovieThumbnailItem(
                 movie = item,
                 onClick = onClick
             )
-
-
         }
     }
 
 }
 
 @Composable
-private fun ListItem(
+ fun MovieThumbnailItem(
     modifier: Modifier = Modifier,
     movie: DomainMovieModel,
     onClick: (Int)->Unit
@@ -90,7 +88,7 @@ private fun ListItem(
 @Composable
 private fun Preview(){
     AppTheme() {
-        ListItem(
+        MovieThumbnailItem(
             movie = sampleMovie1,
             onClick = {}
         )

@@ -1,6 +1,7 @@
 package com.farshad.topmovies_compose.ui.screnns.search
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -69,8 +70,12 @@ fun SearchHistoryScreen(
 
             Row(
                 modifier = Modifier
+//                    .border(
+//                        width = 1.dp,
+//                        color = MaterialTheme.colorScheme.onBackground
+//                    )
                     .shadow(
-                        elevation = 3.dp,
+                        elevation = 8.dp,
                         spotColor = MaterialTheme.colorScheme.onBackground,
                         shape = MaterialTheme.shapes.medium
                     )

@@ -1,6 +1,7 @@
 package com.farshad.topmovies_compose.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.LibraryAdd
 import androidx.compose.material.icons.rounded.LocalMovies
@@ -9,6 +10,7 @@ import androidx.compose.material.icons.rounded.Movie
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.farshad.topmovies_compose.navigation.NavigationConstants.DASHBOARD_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.DETAIL_SCREEN
+import com.farshad.topmovies_compose.navigation.NavigationConstants.FAVORITE_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.Filter_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.LOGIN_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.MOVIE_BY_GENRE_SCREEN
@@ -63,6 +65,11 @@ sealed class Screens(
     object Submit: Screens(
         icon = Icons.Rounded.LibraryAdd,
         route = SUBMIT_SCREEN
+    )
+
+    object Favorite: Screens(
+        icon = Icons.Rounded.Favorite,
+        route = FAVORITE_SCREEN
     )
 
 

@@ -49,10 +49,12 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.farshad.moviesAppCompose.data.model.ui.Resource
 import com.farshad.topmovies_compose.R
 import com.farshad.topmovies_compose.data.dataStore.DataStoreViewModel
 import com.farshad.topmovies_compose.navigation.NavigationConstants.SEARCH_SCREEN
 import com.farshad.topmovies_compose.ui.screnns.common.MovieHorizontalItemShimmer
+import com.farshad.topmovies_compose.ui.screnns.favorite.FavoriteScreenViewModel
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
 
 
@@ -95,17 +97,19 @@ fun MainScreen(navHostController: NavHostController) {
 fun BottomBar(
     modifier: Modifier= Modifier,
     navHostController: NavHostController,
-    dataStoreViewModel: DataStoreViewModel= hiltViewModel()
+    dataStoreViewModel: DataStoreViewModel= hiltViewModel(),
 ) {
 
     val isLoggedIn by dataStoreViewModel.isLoggedIn.collectAsState(initial = false)
 
-    val pages =
+
+    val pages: Set<Screens> =
         if (isLoggedIn){
             setOf(
                 Screens.Dashboard,
                 Screens.MovieList,
-                Screens.Submit
+                Screens.Submit,
+                Screens.Favorite
             )
         }else{
             setOf(

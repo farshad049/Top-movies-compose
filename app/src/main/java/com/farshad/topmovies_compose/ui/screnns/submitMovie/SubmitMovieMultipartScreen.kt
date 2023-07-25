@@ -105,7 +105,7 @@ fun SubmitMovieMultipart(
     var movieTitle by rememberSaveable { mutableStateOf("") }
     var imdbId by rememberSaveable { mutableStateOf("") }
     var country by rememberSaveable { mutableStateOf("") }
-    var year by rememberSaveable { mutableIntStateOf(0) }
+    var year by rememberSaveable { mutableStateOf("") }
     var director by rememberSaveable { mutableStateOf("") }
     var imdbRating by rememberSaveable { mutableStateOf("") }
     var imdbVoting by rememberSaveable { mutableStateOf("") }
@@ -161,7 +161,7 @@ fun SubmitMovieMultipart(
             IntTextField(
                 error = error.year,
                 label = stringResource(id = R.string.year),
-                valueOfTxtField = { year = it.toInt() }
+                valueOfTxtField = { year = it}
             )
 
             MyTextField(
@@ -191,7 +191,7 @@ fun SubmitMovieMultipart(
                             title = movieTitle,
                             imdb_id = imdbId,
                             country = country,
-                            year = year,
+                            year = year.toInt(),
                             director = director,
                             imdb_rating = imdbRating,
                             imdb_votes = imdbVoting,

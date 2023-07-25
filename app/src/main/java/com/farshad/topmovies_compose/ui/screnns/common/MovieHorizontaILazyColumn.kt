@@ -1,22 +1,21 @@
 package com.farshad.topmovies_compose.ui.screnns.common
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -27,7 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,7 +47,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.topmovies_compose.R
-import com.farshad.topmovies_compose.ui.screnns.search.NoResultFound
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import com.farshad.topmovies_compose.ui.theme.myYellow
 import com.farshad.topmovies_compose.util.Convertors
@@ -104,7 +101,7 @@ fun MovieHorizontalItem(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(90.dp)
+            .wrapContentHeight()
             .shadow(
                 elevation = 3.dp,
                 spotColor = MaterialTheme.colorScheme.onBackground,
@@ -117,7 +114,7 @@ fun MovieHorizontalItem(
             .clip(shape = MaterialTheme.shapes.medium)
             .clickable { onRowClick(movie.id) }
     ) {
-        Row(modifier = Modifier.fillMaxWidth()) {
+        Row(modifier = Modifier.fillMaxSize()) {
 
             Column(modifier = Modifier
                 .fillMaxSize()
@@ -126,6 +123,7 @@ fun MovieHorizontalItem(
                 AsyncImage(
                     modifier = Modifier
                         .fillMaxSize()
+                        .aspectRatio(1.1f)
                         .clip(shape = MaterialTheme.shapes.medium),
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(movie.poster)

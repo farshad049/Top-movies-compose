@@ -4,7 +4,7 @@ import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.topmovies_compose.data.model.network.NetworkMovieModel
 import javax.inject.Inject
 
-class MovieMapper @Inject constructor() {
+class MovieMapper @Inject constructor(){
 
     fun buildFrom(networkMovieModel: NetworkMovieModel?): DomainMovieModel {
         return DomainMovieModel(

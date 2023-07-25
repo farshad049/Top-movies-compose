@@ -10,9 +10,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.farshad.topmovies_compose.navigation.NavigationConstants.DASHBOARD_GRAPH
 import com.farshad.topmovies_compose.navigation.NavigationConstants.ROOT_GRAPH
+import com.farshad.topmovies_compose.ui.screnns.favorite.FavoriteScreenWithViewModel
 import com.farshad.topmovies_compose.ui.screnns.filter.FilterViewModel
 import com.farshad.topmovies_compose.ui.screnns.movieDetail.DetailScreenWithViewModel
-import com.farshad.topmovies_compose.ui.screnns.search.SearchScreen
 import com.farshad.topmovies_compose.ui.screnns.search.SearchScreenWithViewModel
 import com.farshad.topmovies_compose.ui.screnns.submitMovie.SubmitScreenWithViewModel
 
@@ -47,6 +47,11 @@ fun SetupNavGraph(navController: NavHostController){
                 SubmitScreenWithViewModel(navController = navController)
             }
 
+            composable(route = Screens.Favorite.route){
+                FavoriteScreenWithViewModel(navController = navController)
+            }
+
+
 
 
             composable(
@@ -70,5 +75,8 @@ fun SetupNavGraph(navController: NavHostController){
 
         }
     }
+
+
+
 
 

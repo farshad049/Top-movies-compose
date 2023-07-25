@@ -35,7 +35,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.topmovies_compose.ui.screnns.common.MovieHorizontalLazyColumn
 import com.farshad.topmovies_compose.ui.screnns.filter.FilterViewModel
-import com.farshad.topmovies_compose.ui.screnns.filter.model.ModelDataForMovieList
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
 

@@ -2,7 +2,6 @@ package com.farshad.topmovies_compose.ui.screnns.movieDetail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.moviesAppCompose.data.model.ui.Resource
 import com.farshad.moviesAppCompose.data.repository.MovieDetailRepository
 import com.farshad.topmovies_compose.data.roomDatabase.Entity.FavoriteMovieEntity
@@ -19,10 +18,10 @@ class MovieDetailViewModel @Inject constructor(
     private val roomRepository: RoomRepository
 ) : ViewModel() {
 
-    private val _movieByIdFlow= MutableStateFlow<DomainMovieModel?>(null)
+    private val _movieByIdFlow= MutableStateFlow<com.farshad.topmovies_compose.data.model.domain.DomainMovieModel?>(null)
     val movieByIdFlow = _movieByIdFlow.asStateFlow()
 
-    private val _movieByGenreFlow= MutableStateFlow<List<DomainMovieModel>>(emptyList())
+    private val _movieByGenreFlow= MutableStateFlow<List<com.farshad.topmovies_compose.data.model.domain.DomainMovieModel>>(emptyList())
     val movieByGenreFlow = _movieByGenreFlow.asStateFlow()
 
     private val _favoriteMovieListFlow = MutableStateFlow<List<FavoriteMovieEntity>>(emptyList())
@@ -52,7 +51,7 @@ class MovieDetailViewModel @Inject constructor(
         }
     }
 
-     fun getFavoriteMovieList(){
+     private fun getFavoriteMovieList(){
         viewModelScope.launch {
             roomRepository.getAllFavoriteMovies().collectLatest {
                 _favoriteMovieListFlow.emit(it)

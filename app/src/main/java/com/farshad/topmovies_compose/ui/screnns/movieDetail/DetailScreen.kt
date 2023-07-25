@@ -49,9 +49,11 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.farshad.moviesAppCompose.data.model.ui.Resource
 import com.farshad.topmovies_compose.R
-import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
+import com.farshad.topmovies_compose.data.model.mapper.MovieEntityMapper
+import com.farshad.topmovies_compose.data.roomDatabase.Entity.FavoriteMovieEntity
 import com.farshad.topmovies_compose.ui.screnns.common.ImageThumbnailRow
 import com.farshad.topmovies_compose.ui.screnns.common.LoadingAnimation
+import com.farshad.topmovies_compose.ui.screnns.favorite.FavoriteScreenViewModel
 import com.farshad.topmovies_compose.ui.screnns.movieDetail.model.UiMovieDetailModel
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import com.farshad.topmovies_compose.ui.theme.myRed
@@ -68,9 +70,13 @@ import com.google.accompanist.pager.rememberPagerState
 fun DetailScreenWithViewModel(
     navController: NavHostController,
     detailViewModel: MovieDetailViewModel = hiltViewModel(),
+    favoriteScreenViewModel: FavoriteScreenViewModel= hiltViewModel(),
     arg: Int?
 ) {
-    val detailScreenOnClicks= DetailScreenOnClicks(navController = navController)
+    val context= LocalContext.current
+
+    val detailScreenOnClicks= DetailScreenOnClicks(navController = navController, favoriteScreenViewModel = favoriteScreenViewModel)
+
     arg?.let { detailViewModel.getMovieById(arg) }
 
     val data by detailViewModel.combinedData.collectAsStateWithLifecycle(initialValue = Resource.Loading)
@@ -79,8 +85,15 @@ fun DetailScreenWithViewModel(
         is Resource.Success -> {
             DetailScreen(
                 movieItem = (data as Resource.Success<UiMovieDetailModel>).data,
-                onFavoriteClick = {},
-                onShareClick = {},
+                onFavoriteClick = {movie->
+                    detailScreenOnClicks.onFavoriteClick(
+                        isFavorite = (data as Resource.Success<UiMovieDetailModel>).data.isFavorite,
+                        movie = movie
+                    )
+                },
+                onShareClick = {movieId ->
+                    detailScreenOnClicks.onShareClick(context = context, movieId = movieId)
+                },
                 onSimilarMovieClick = {detailScreenOnClicks.onSimilarMovieClick(it)}
             )
         }
@@ -97,7 +110,7 @@ fun DetailScreenWithViewModel(
 @Composable
 fun DetailScreen(
     movieItem: UiMovieDetailModel,
-    onFavoriteClick: (Int) -> Unit,
+    onFavoriteClick: (FavoriteMovieEntity) -> Unit,
     onShareClick: (Int) -> Unit,
     onSimilarMovieClick: (Int) -> Unit
 ) {
@@ -147,7 +160,7 @@ fun DetailScreen(
 fun DetailScreeUp(
     modifier: Modifier= Modifier,
     movie: UiMovieDetailModel,
-    onFavoriteClick: (Int)-> Unit,
+    onFavoriteClick: (FavoriteMovieEntity)-> Unit,
     onShareClick: (Int)-> Unit
 ){
     Box() {
@@ -206,7 +219,7 @@ fun DetailScreeUp(
             ,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { onFavoriteClick(movie.movie.id)}) {
+            IconButton(onClick = { onFavoriteClick(MovieEntityMapper().buildFrom(movie.movie))}) {
                 Icon(
                     modifier = Modifier.size(40.dp),
                     imageVector = if (movie.isFavorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
@@ -519,7 +532,7 @@ fun Images(
             )
             .background(
                 shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.outline
+                color = Color.Gray
             )
             .clip(MaterialTheme.shapes.medium),
     ) {
@@ -562,7 +575,7 @@ fun Images(
 @Composable
 fun SimilarMovies(
     modifier: Modifier= Modifier,
-    similarMovies: List<DomainMovieModel>,
+    similarMovies: List<com.farshad.topmovies_compose.data.model.domain.DomainMovieModel>,
     onSimilarMovieClick: (Int) -> Unit
 ){
     Column(modifier = modifier.fillMaxWidth()) {
