@@ -1,87 +1,69 @@
 package com.farshad.topmovies_compose.navigation
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Icon
-import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Scaffold
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.farshad.moviesAppCompose.data.model.ui.Resource
-import com.farshad.topmovies_compose.R
-import com.farshad.topmovies_compose.data.dataStore.DataStoreViewModel
 import com.farshad.topmovies_compose.navigation.NavigationConstants.SEARCH_SCREEN
-import com.farshad.topmovies_compose.ui.screnns.common.MovieHorizontalItemShimmer
-import com.farshad.topmovies_compose.ui.screnns.favorite.FavoriteScreenViewModel
-import com.farshad.topmovies_compose.util.DarkAndLightPreview
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun MainScreen(navHostController: NavHostController) {
 
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
+
     var showBottomAndTopBar by rememberSaveable { mutableStateOf(true) }
     val navBackStackEntry by navHostController.currentBackStackEntryAsState()
-    var topBarPadding by remember { mutableStateOf(60.dp) }
-
-    topBarPadding = if (navBackStackEntry?.destination?.route == SEARCH_SCREEN) 0.dp else 60.dp
 
     showBottomAndTopBar =
         when (navBackStackEntry?.destination?.route) {
-        SEARCH_SCREEN -> false // on this screen bottom bar should be hidden
-        else -> true // in all other cases show bottom bar
-    }
+            SEARCH_SCREEN -> false // on this screen bottom bar should be hidden
+            else -> true // in all other cases show bottom bar
+        }
 
 
     Scaffold(
-        topBar = { if (showBottomAndTopBar) MyTopBar(onTopBarClick = {navHostController.navigate(Screens.Search.route)})},
-        bottomBar = { if (showBottomAndTopBar) BottomBar(navHostController = navHostController) }
+        scaffoldState = scaffoldState,
+        drawerContent = {
+            Drawer()
+        },
+        topBar = {
+            if (showBottomAndTopBar) {
+                MyTopBar(
+                    onTopBarClick = { navHostController.navigate(Screens.Search.route) },
+                    onDrawerClick = {
+                        scope.launch {
+                            scaffoldState.drawerState.open()
+                        }
+                    }
+                )
+            }
+        },
+        bottomBar = {
+            if (showBottomAndTopBar) {
+                BottomBar(navHostController = navHostController)
+            }
+        },
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = topBarPadding, bottom = innerPadding.calculateBottomPadding())
+                .padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = innerPadding.calculateBottomPadding()
+                )
         ) {
             SetupNavGraph(navController = navHostController)
         }
@@ -93,199 +75,10 @@ fun MainScreen(navHostController: NavHostController) {
 
 
 
-@Composable
-fun BottomBar(
-    modifier: Modifier= Modifier,
-    navHostController: NavHostController,
-    dataStoreViewModel: DataStoreViewModel= hiltViewModel(),
-) {
-
-    val isLoggedIn by dataStoreViewModel.isLoggedIn.collectAsState(initial = false)
-
-
-    val pages: Set<Screens> =
-        if (isLoggedIn){
-            setOf(
-                Screens.Dashboard,
-                Screens.MovieList,
-                Screens.Submit,
-                Screens.Favorite
-            )
-        }else{
-            setOf(
-                Screens.Dashboard,
-                Screens.MovieList,
-                Screens.Register
-            )
-        }
-
-
-    val navBackStackEntry by navHostController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-
-    MyBottomNavigation(modifier = modifier) {
-        pages.forEach { screen ->
-            AddItem(
-                screen = screen,
-                currentDestination = currentDestination,
-                navHostController = navHostController
-            )
-        }
-    }
-}
-
-
-@Composable
-fun RowScope.AddItem(
-    screen: Screens,
-    currentDestination: NavDestination?,
-    navHostController: NavHostController
-) {
-    BottomNavigationItem(
-        icon = {
-            Icon(
-                imageVector = screen.icon!!,
-                contentDescription = "navigation icon"
-            )
-        },
-        selectedContentColor= MaterialTheme.colorScheme.onBackground,
-        selected = currentDestination?.hierarchy?.any() {
-            it.route == screen.route
-        } == true,
-        unselectedContentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f), // toma make the unSelected Item even less visible
-        onClick = {
-            navHostController.navigate(screen.route) {
-                popUpTo(navHostController.graph.findStartDestination().id) // get back to home screen when press back bottom
-                launchSingleTop =
-                    true // the second touch on back bottom will exit the application since other copies of the start destination Id have been removed from backStack throw this piece of ode
-            }
-        }
-    )
-}
-
-
-@Composable
-fun MyBottomNavigation(
-    modifier: Modifier= Modifier,
-    content: @Composable RowScope.() -> Unit
-) {
-    val backGroundColor=Brush.verticalGradient(
-        colors = listOf(
-            Color.Transparent,
-            Color.Gray.copy(alpha = 0.5f) ,
-
-        )
-    )
-
-    val borderColor=Brush.verticalGradient(
-        colors = listOf(
-            MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f) ,
-            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f)
-        )
-    )
-
-    val shape= RoundedCornerShape(
-        topStart = 25.dp,
-        topEnd = 25.dp,
-        bottomStart = 0.dp,
-        bottomEnd = 0.dp
-    )
-
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .border(
-                width = 1.dp,
-                brush = borderColor,
-                shape = shape
-            )
-            .background(
-                brush = backGroundColor,
-                shape = shape
-            )
-            .clip(
-                shape = shape
-            )
-
-    ) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .selectableGroup(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            content = content
-        )
-    }
-}
 
 
 
-@Composable
-fun MyTopBar(
-    modifier: Modifier= Modifier,
-    onTopBarClick: () -> Unit
-){
-    val shape = RoundedCornerShape(35.dp)
 
-    val backgroundColor= Brush.verticalGradient(
-        colors = listOf(
-            Color.Transparent,
-            Color.Gray.copy(alpha = 0.1f),
-            Color.Transparent,
-        )
-    )
-
-    Box(
-        modifier = modifier
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f),
-                shape = shape
-            )
-            .fillMaxWidth()
-            .height(50.dp)
-            .shadow(
-                elevation = 8.dp, spotColor = MaterialTheme.colorScheme.onBackground,
-                shape = RoundedCornerShape(35.dp)
-            )
-            .background(
-                brush = backgroundColor,
-                shape = shape
-            )
-            .clip(shape = shape)
-            .clickable { onTopBarClick() }
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .fillMaxSize()
-                ,
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Search,
-                contentDescription ="",
-                tint = MaterialTheme.colorScheme.primary
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = stringResource(id = R.string.type_to_search),
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
-    }
-}
-
-@DarkAndLightPreview
-@Composable
-private fun Preview(){
-    MyTopBar(
-        onTopBarClick = {}
-    )
-}
 
 
 

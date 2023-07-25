@@ -101,19 +101,19 @@ fun FilterRow(
     onChipClick: (String) -> Unit,
     onFilterIconClick: () -> Unit
 ){
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+
+    Box(
+        modifier = Modifier.fillMaxWidth()
     ) {
 
         InputChipLazyRow(
-            modifier = Modifier.padding(horizontal = 4.dp),
+            modifier = Modifier.padding(horizontal = 4.dp).align(Alignment.CenterStart),
             list = filters,
             onClick = onChipClick
         )
 
         IconButton(
+            modifier = Modifier.align(Alignment.CenterEnd),
             onClick = { onFilterIconClick() }
         ) {
             Icon(
@@ -123,7 +123,9 @@ fun FilterRow(
                 contentDescription = ""
             )
         }
+
     }
+
 }
 
 
