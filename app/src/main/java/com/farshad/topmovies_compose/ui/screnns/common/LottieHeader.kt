@@ -23,7 +23,8 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
 fun LottieHeader(
-    lottieCompositionSpec: LottieCompositionSpec
+    lottieCompositionSpec: LottieCompositionSpec,
+    modifier: Modifier = Modifier
 ) {
     val composition by rememberLottieComposition(spec = lottieCompositionSpec)
     var isPlaying by remember { mutableStateOf(true) }
@@ -39,10 +40,10 @@ fun LottieHeader(
 
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                color = MaterialTheme.colorScheme.surface,
                 shape = MaterialTheme.shapes.medium
             )
             .height(300.dp)

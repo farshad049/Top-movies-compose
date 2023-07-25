@@ -91,7 +91,7 @@ fun DashboardScreen(
                 onClick = onImageClick
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             HeaderWithViewAll(
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
@@ -105,7 +105,7 @@ fun DashboardScreen(
                 onClick = { onGenreClick(it) }
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             HeaderWithViewAll(
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
