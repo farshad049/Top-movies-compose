@@ -13,7 +13,9 @@ import com.farshad.topmovies_compose.navigation.NavigationConstants.ROOT_GRAPH
 import com.farshad.topmovies_compose.ui.screnns.favorite.FavoriteScreenWithViewModel
 import com.farshad.topmovies_compose.ui.screnns.filter.FilterViewModel
 import com.farshad.topmovies_compose.ui.screnns.movieDetail.DetailScreenWithViewModel
+import com.farshad.topmovies_compose.ui.screnns.profile.ProfileScreenWithViewModel
 import com.farshad.topmovies_compose.ui.screnns.search.SearchScreenWithViewModel
+import com.farshad.topmovies_compose.ui.screnns.setting.SettingScreenWithViewModel
 import com.farshad.topmovies_compose.ui.screnns.submitMovie.SubmitScreenWithViewModel
 
 @SuppressLint("SuspiciousIndentation")
@@ -49,6 +51,14 @@ fun SetupNavGraph(navController: NavHostController){
 
             composable(route = Screens.Favorite.route){
                 FavoriteScreenWithViewModel(navController = navController)
+            }
+
+            composable(route = Screens.Setting.route){
+                SettingScreenWithViewModel(navController = navController)
+            }
+
+            composable(route = Screens.Profile.route){
+                ProfileScreenWithViewModel(navController = navController)
             }
 
 

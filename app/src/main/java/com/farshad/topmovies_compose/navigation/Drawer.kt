@@ -40,7 +40,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.farshad.topmovies_compose.R
 import com.farshad.topmovies_compose.data.dataStore.DataStoreViewModel
-import com.farshad.topmovies_compose.ui.screnns.userInfo.UserInfoViewModel
+import com.farshad.topmovies_compose.ui.screnns.profile.ProfileViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -56,11 +56,11 @@ fun Drawer(
     drawerState: DrawerState,
     navHostController: NavHostController,
     dataStoreViewModel: DataStoreViewModel = hiltViewModel(),
-    userInfoViewModel: UserInfoViewModel= hiltViewModel()
+    profileViewModel: ProfileViewModel= hiltViewModel()
 ) {
     val isLoggedIn by dataStoreViewModel.isLoggedIn.collectAsState(initial = false)
 
-    val useName by userInfoViewModel.userInfoFlow.collectAsState()
+    val useName by profileViewModel.userInfoFlow.collectAsState()
 
     val items = listOf(
         DrawerItem(
@@ -71,12 +71,12 @@ fun Drawer(
         DrawerItem(
             icon = Icons.Default.Settings,
             title = stringResource(id = R.string.setting),
-            route = Screens.Favorite.route
+            route = Screens.Setting.route
         ),
         DrawerItem(
             icon = Icons.Default.Person,
             title = stringResource(id = R.string.profile),
-            route = Screens.Favorite.route
+            route = Screens.Profile.route
         )
 
     )

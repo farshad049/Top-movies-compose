@@ -20,6 +20,8 @@ object NavigationConstants {
     const val LOGIN_SCREEN= "login_screen"
     const val SUBMIT_SCREEN= "submit_screen"
     const val FAVORITE_SCREEN= "favorite_screen"
+    const val SETTING_SCREEN= "setting_screen"
+    const val PROFILE_SCREEN="user-info_screen"
 
 
     //nav arg names

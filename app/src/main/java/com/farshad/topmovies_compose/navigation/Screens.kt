@@ -2,11 +2,13 @@ package com.farshad.topmovies_compose.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.Filter
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.LibraryAdd
 import androidx.compose.material.icons.rounded.LocalMovies
 import androidx.compose.material.icons.rounded.Login
-import androidx.compose.material.icons.rounded.Movie
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.farshad.topmovies_compose.navigation.NavigationConstants.DASHBOARD_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.DETAIL_SCREEN
@@ -16,8 +18,10 @@ import com.farshad.topmovies_compose.navigation.NavigationConstants.LOGIN_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.MOVIE_BY_GENRE_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.MOVIE_ID
 import com.farshad.topmovies_compose.navigation.NavigationConstants.MOVIE_LIST_SCREEN
+import com.farshad.topmovies_compose.navigation.NavigationConstants.PROFILE_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.REGISTER_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.SEARCH_SCREEN
+import com.farshad.topmovies_compose.navigation.NavigationConstants.SETTING_SCREEN
 import com.farshad.topmovies_compose.navigation.NavigationConstants.SUBMIT_SCREEN
 
 sealed class Screens(
@@ -42,7 +46,7 @@ sealed class Screens(
     )
     
     object Filter: Screens(
-        icon = null,
+        icon = Icons.Rounded.Filter,
         route = Filter_SCREEN
     )
 
@@ -58,7 +62,7 @@ sealed class Screens(
     )
 
     object Login: Screens(
-        icon = null,
+        icon = Icons.Rounded.Login,
         route = LOGIN_SCREEN
     )
 
@@ -70,6 +74,16 @@ sealed class Screens(
     object Favorite: Screens(
         icon = Icons.Rounded.Favorite,
         route = FAVORITE_SCREEN
+    )
+
+    object Profile: Screens(
+        icon = Icons.Rounded.Person,
+        route = PROFILE_SCREEN
+    )
+
+    object Setting: Screens(
+        icon = Icons.Rounded.Settings,
+        route = SETTING_SCREEN
     )
 
 

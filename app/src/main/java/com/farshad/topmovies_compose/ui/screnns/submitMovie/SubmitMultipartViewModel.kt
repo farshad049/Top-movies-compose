@@ -2,9 +2,11 @@ package com.farshad.topmovies_compose.ui.screnns.submitMovie
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.farshad.topmovies_compose.R
 import com.farshad.topmovies_compose.data.repository.SubmitMovieRepository
 import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.SubmitFieldValidationModel
 import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.SubmitResponseModel
+import com.farshad.topmovies_compose.util.ResourcesProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SubmitMultipartViewModel @Inject constructor(
-    private val repository: SubmitMovieRepository
+    private val repository: SubmitMovieRepository,
+    private val resourcesProvider: ResourcesProvider
 ):ViewModel() {
 
     private val _submitMovieMultipartFlow = Channel<SubmitResponseModel>()
@@ -63,22 +66,22 @@ class SubmitMultipartViewModel @Inject constructor(
         when{
             titleB.isEmpty() -> {
                 _validationMutableFlow.value=
-                    SubmitFieldValidationModel(title = "* please enter a valid title")
+                    SubmitFieldValidationModel(title = resourcesProvider.getString(R.string.please_enter_a_valid_title))
                 return
             }
             imdbIdB.isEmpty() -> {
                 _validationMutableFlow.value=
-                    SubmitFieldValidationModel(imdbId = "* please enter a valid IMDB ID")
+                    SubmitFieldValidationModel(imdbId = resourcesProvider.getString(R.string.please_enter_a_valid_imdb_id))
                 return
             }
             countryB.isEmpty() -> {
                 _validationMutableFlow.value =
-                    SubmitFieldValidationModel(country = "* please enter a valid country name")
+                    SubmitFieldValidationModel(country = resourcesProvider.getString(R.string.please_enter_a_valid_country_name))
                 return
             }
             yearB.isEmpty() && year.length < 4 -> {
                 _validationMutableFlow.value=
-                    SubmitFieldValidationModel(year = "* please enter a valid year")
+                    SubmitFieldValidationModel(year = resourcesProvider.getString(R.string.please_enter_a_valid_year))
                 return
 
             }else ->{

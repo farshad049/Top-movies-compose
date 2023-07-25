@@ -1,8 +1,7 @@
-package com.farshad.topmovies_compose.ui.screnns.userInfo
+package com.farshad.topmovies_compose.ui.screnns.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.farshad.moviesAppCompose.data.model.ui.Resource
 import com.farshad.topmovies_compose.data.model.network.UserRegisteredModel
 import com.farshad.topmovies_compose.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UserInfoViewModel @Inject constructor(
+class ProfileViewModel @Inject constructor(
     private val repository: UserRepository
 ):ViewModel() {
 

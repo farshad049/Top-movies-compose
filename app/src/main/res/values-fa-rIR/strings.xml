@@ -83,5 +83,9 @@
     <string name="please_enter_a_valid_email">لفطا یک ایمیل معتبر وارد کنید</string>
     <string name="please_enter_a_valid_username">لفطا یک نام معتبر وارد کنید</string>
     <string name="please_enter_a_valid_password">لفطا یک پسوورد معتبر وارد کنید</string>
+    <string name="please_enter_a_valid_title">نام را وارد کنید</string>
+    <string name="please_enter_a_valid_imdb_id">شناسه IMDB  وارد کنید</string>
+    <string name="please_enter_a_valid_country_name">نام کشور را وارد کنید</string>
+    <string name="please_enter_a_valid_year">سال را وارد کنید</string>
 
 </resources>
