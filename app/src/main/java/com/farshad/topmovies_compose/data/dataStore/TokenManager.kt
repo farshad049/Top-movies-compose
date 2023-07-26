@@ -11,7 +11,7 @@ import com.farshad.topmovies_compose.data.model.network.UserAuthModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class TokenManager1(private val context: Context) {
+class TokenManager(private val context: Context) {
 
 
     companion object{

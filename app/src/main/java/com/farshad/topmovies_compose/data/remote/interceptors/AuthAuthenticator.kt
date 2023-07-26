@@ -2,7 +2,7 @@ package com.farshad.topmovies_compose.data.remote.interceptors
 
 import android.content.Context
 import com.farshad.moviesAppCompose.data.remote.AuthService
-import com.farshad.topmovies_compose.data.dataStore.TokenManager1
+import com.farshad.topmovies_compose.data.dataStore.TokenManager
 import com.farshad.topmovies_compose.data.model.network.UserAuthModel
 import com.farshad.topmovies_compose.util.Constants.BASE_URL
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -25,7 +25,7 @@ class AuthAuthenticator @Inject constructor(
     @ApplicationContext val context: Context
 ) : Authenticator {
 
-    private val tokenManager= TokenManager1(context)
+    private val tokenManager= TokenManager(context)
 
     override fun authenticate(route: Route?, response: Response): Request? {
 

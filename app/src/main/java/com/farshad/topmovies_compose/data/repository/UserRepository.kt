@@ -1,7 +1,7 @@
 package com.farshad.topmovies_compose.data.repository
 
 
-import com.farshad.topmovies_compose.data.dataStore.TokenManager1
+import com.farshad.topmovies_compose.data.dataStore.TokenManager
 import com.farshad.topmovies_compose.data.model.network.RegisterPostBody
 import com.farshad.topmovies_compose.data.model.network.UserRegisteredModel
 import com.farshad.topmovies_compose.data.remote.ApiClient
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class UserRepository @Inject constructor(
     private val apiClient: ApiClient,
-    private val tokenManager: TokenManager1
+    private val tokenManager: TokenManager
     ) {
 
 

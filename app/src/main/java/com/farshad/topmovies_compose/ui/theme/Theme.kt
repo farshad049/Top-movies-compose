@@ -6,6 +6,12 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.farshad.topmovies_compose.data.dataStore.DataStoreConstants.DARK
+import com.farshad.topmovies_compose.data.dataStore.DataStoreConstants.LIGHT
+import com.farshad.topmovies_compose.data.dataStore.DataStoreViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
@@ -76,9 +82,19 @@ private val DarkColorScheme = darkColorScheme(
 
 @Composable
 fun AppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    dataStoreViewModel: DataStoreViewModel= hiltViewModel(),
     content: @Composable () -> Unit
 ) {
+    var darkTheme: Boolean = isSystemInDarkTheme()
+
+    val theme by dataStoreViewModel.theme.collectAsStateWithLifecycle(initialValue = DARK)
+
+    when (theme){
+        DARK -> darkTheme= true
+        LIGHT -> darkTheme= false
+        else -> {}
+    }
+
     val colors = if (darkTheme) {
         DarkColorScheme
     } else {

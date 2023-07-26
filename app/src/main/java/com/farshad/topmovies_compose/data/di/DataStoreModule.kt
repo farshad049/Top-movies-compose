@@ -1,7 +1,10 @@
 package com.farshad.topmovies_compose.data.di
 
 import android.content.Context
-import com.farshad.topmovies_compose.data.dataStore.TokenManager1
+import com.farshad.topmovies_compose.data.dataStore.BiometricManager
+import com.farshad.topmovies_compose.data.dataStore.LocaleManager
+import com.farshad.topmovies_compose.data.dataStore.ThemeManager
+import com.farshad.topmovies_compose.data.dataStore.TokenManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,9 +18,30 @@ object DataStoreModule {
 
     @Provides
     @Singleton
-    fun provideDataStore(@ApplicationContext context: Context):TokenManager1{
-        return TokenManager1(context = context)
+    fun provideTokenManager(@ApplicationContext context: Context):TokenManager{
+        return TokenManager(context = context)
     }
+
+    @Provides
+    @Singleton
+    fun provideLocaleManager(@ApplicationContext context: Context):LocaleManager{
+        return LocaleManager(context = context)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideBiometricManager(@ApplicationContext context: Context): BiometricManager {
+        return BiometricManager(context = context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideThemeManager(@ApplicationContext context: Context): ThemeManager {
+        return ThemeManager(context = context)
+    }
+
+
 
 
 }
