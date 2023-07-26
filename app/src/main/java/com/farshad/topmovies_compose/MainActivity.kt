@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -19,6 +20,7 @@ import com.farshad.topmovies_compose.navigation.MainScreen
 import com.farshad.topmovies_compose.navigation.SetupNavGraph
 import com.farshad.topmovies_compose.ui.screnns.dashboard.DashboardViewModel
 import com.farshad.topmovies_compose.ui.theme.AppTheme
+import com.farshad.topmovies_compose.util.CheckInternetConnection
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -33,21 +35,15 @@ class MainActivity : ComponentActivity() {
     private val dataStoreViewModel: DataStoreViewModel by viewModels()
     private val dashboardViewModel: DashboardViewModel by viewModels()
 
-    var isLoading= false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
-
-        lifecycleScope.launch {
-            dashboardViewModel.combinedData.collectLatest {data->
-                if (data is Resource.Loading) isLoading= true
-            }
-        }
-
         installSplashScreen().apply {
-            setKeepOnScreenCondition{
-                isLoading
+            setKeepOnScreenCondition {
+                dashboardViewModel.firstPageMovieFlow.value is Resource.Loading ||
+                        dashboardViewModel.allGenresMovieFlow.value is Resource.Loading
             }
         }
 
@@ -62,17 +58,16 @@ class MainActivity : ComponentActivity() {
 
 
 
+
         setContent {
             AppTheme() {
-                navHostController= rememberNavController()
+                navHostController = rememberNavController()
                 MainScreen(navHostController = navHostController)
             }
         }
 
 
-
     }
-
 
 
     //set locale

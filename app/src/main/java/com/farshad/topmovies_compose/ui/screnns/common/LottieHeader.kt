@@ -15,22 +15,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
 fun LottieHeader(
     lottieCompositionSpec: LottieCompositionSpec,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    backgroundColor: Color= MaterialTheme.colorScheme.surface
 ) {
     val composition by rememberLottieComposition(spec = lottieCompositionSpec)
     var isPlaying by remember { mutableStateOf(true) }
     val progress by animateLottieCompositionAsState(
         composition = composition,
-        isPlaying = isPlaying
+        iterations = LottieConstants.IterateForever
     )
 
     LaunchedEffect(key1 = progress) {
@@ -43,11 +46,10 @@ fun LottieHeader(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                color = MaterialTheme.colorScheme.surface,
+                color = backgroundColor,
                 shape = MaterialTheme.shapes.medium
             )
-            .height(300.dp)
-            .clickable { isPlaying = true },
+            .height(300.dp),
         contentAlignment = Alignment.Center
     ) {
 

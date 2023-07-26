@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -40,6 +41,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.farshad.topmovies_compose.R
 import com.farshad.topmovies_compose.data.dataStore.DataStoreViewModel
+import com.farshad.topmovies_compose.ui.screnns.common.LottieHeader
 import com.farshad.topmovies_compose.ui.screnns.profile.ProfileViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -56,7 +58,7 @@ fun Drawer(
     drawerState: DrawerState,
     navHostController: NavHostController,
     dataStoreViewModel: DataStoreViewModel = hiltViewModel(),
-    profileViewModel: ProfileViewModel= hiltViewModel()
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
     val isLoggedIn by dataStoreViewModel.isLoggedIn.collectAsState(initial = false)
 
@@ -89,11 +91,12 @@ fun Drawer(
 
                 Spacer(Modifier.height(12.dp))
 
-                DrawerLottieHeader(
-                    lottieCompositionSpec = LottieCompositionSpec.RawRes(R.raw.camera)
+                LottieHeader(
+                    backgroundColor = Color.Transparent,
+                    lottieCompositionSpec = LottieCompositionSpec.RawRes(R.raw.movieanimation)
                 )
 
-                if (isLoggedIn){
+                if (isLoggedIn) {
                     Spacer(Modifier.height(12.dp))
                     NavigationDrawerItem(
                         icon = {},
@@ -120,7 +123,7 @@ fun Drawer(
                 }
             }
 
-            if (isLoggedIn){
+            if (isLoggedIn) {
                 NavigationDrawerItem(
                     icon = { Icon(Icons.Rounded.Logout, contentDescription = null) },
                     label = { Text(text = stringResource(id = R.string.log_out)) },

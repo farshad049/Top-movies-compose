@@ -10,4 +10,7 @@
 
     <color name="md_theme_light_background">#FFE7E5E3</color>
     <color name="md_theme_dark_background">#FF1F1B16</color>
+
+    <color name="md_theme_light_primary">#FFAC6F0E</color>
+    <color name="md_theme_dark_primary">#FFFFB963</color>
 </resources>

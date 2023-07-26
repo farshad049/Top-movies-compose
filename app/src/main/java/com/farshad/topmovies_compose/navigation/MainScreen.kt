@@ -21,22 +21,27 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.farshad.topmovies_compose.navigation.NavigationConstants.SEARCH_SCREEN
+import com.farshad.topmovies_compose.util.CheckInternetConnection
 import kotlinx.coroutines.launch
 
 
 @Composable
 fun MainScreen(navHostController: NavHostController) {
 
+    val context= LocalContext.current
+    var connectionLiveData= CheckInternetConnection(context)
 
     var showBottomAndTopBar by rememberSaveable { mutableStateOf(true) }
     val navBackStackEntry by navHostController.currentBackStackEntryAsState()
@@ -62,37 +67,43 @@ fun MainScreen(navHostController: NavHostController) {
 
         },
         content = {
-            Scaffold(
-                topBar = {
-                    if (showBottomAndTopBar) {
-                        MyTopBar(
-                            onTopBarClick = { navHostController.navigate(Screens.Search.route) },
-                            onDrawerClick = {
-                                scope.launch {
-                                    drawerState.open()
-                                }
-                            }
-                        )
-                    }
-                },
-                bottomBar = {
-                    if (showBottomAndTopBar) {
-                        BottomBar(navHostController = navHostController)
-                    }
-                },
-            ) { innerPadding ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            top = innerPadding.calculateTopPadding(),
-                            bottom = innerPadding.calculateBottomPadding()
-                        )
-                ) {
-                    SetupNavGraph(navController = navHostController)
-                }
 
+            val isInternetConnected= connectionLiveData.observeAsState().value
+            if (isInternetConnected == true){
+                Scaffold(
+                    topBar = {
+                        if (showBottomAndTopBar) {
+                            MyTopBar(
+                                onTopBarClick = { navHostController.navigate(Screens.Search.route) },
+                                onDrawerClick = {
+                                    scope.launch {
+                                        drawerState.open()
+                                    }
+                                }
+                            )
+                        }
+                    },
+                    bottomBar = {
+                        if (showBottomAndTopBar) {
+                            BottomBar(navHostController = navHostController)
+                        }
+                    },
+                ) { innerPadding ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(
+                                top = innerPadding.calculateTopPadding(),
+                                bottom = innerPadding.calculateBottomPadding()
+                            )
+                    ) {
+                        SetupNavGraph(navController = navHostController)
+                    }
+                }
+            }else{
+                NoInternetScreen()
             }
+
         }
     )
 
