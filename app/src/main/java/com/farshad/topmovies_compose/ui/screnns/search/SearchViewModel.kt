@@ -12,9 +12,6 @@ import com.farshad.topmovies_compose.data.model.mapper.MovieMapper
 import com.farshad.topmovies_compose.data.paging.SearchDataSource
 import com.farshad.topmovies_compose.data.remote.ApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel

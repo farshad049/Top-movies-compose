@@ -3,10 +3,10 @@ package com.farshad.topmovies_compose.ui.screnns.submitMovie
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.farshad.topmovies_compose.R
+import com.farshad.topmovies_compose.data.model.domain.UploadMovieModel
 import com.farshad.topmovies_compose.data.repository.SubmitMovieRepository
 import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.SubmitFieldValidationModel
 import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.SubmitResponseModel
-import com.farshad.topmovies_compose.data.model.domain.UploadMovieModel
 import com.farshad.topmovies_compose.util.ResourcesProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

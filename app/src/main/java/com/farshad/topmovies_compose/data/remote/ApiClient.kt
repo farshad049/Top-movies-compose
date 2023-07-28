@@ -1,13 +1,13 @@
 package com.farshad.topmovies_compose.data.remote
 
+import com.farshad.moviesAppCompose.data.remote.SimpleResponse
+import com.farshad.topmovies_compose.data.model.domain.UploadMovieModel
 import com.farshad.topmovies_compose.data.model.network.GenresModel
 import com.farshad.topmovies_compose.data.model.network.NetworkMovieModel
 import com.farshad.topmovies_compose.data.model.network.PagingModel
 import com.farshad.topmovies_compose.data.model.network.RegisterPostBody
 import com.farshad.topmovies_compose.data.model.network.UserAuthModel
 import com.farshad.topmovies_compose.data.model.network.UserRegisteredModel
-import com.farshad.moviesAppCompose.data.remote.SimpleResponse
-import com.farshad.topmovies_compose.data.model.domain.UploadMovieModel
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response

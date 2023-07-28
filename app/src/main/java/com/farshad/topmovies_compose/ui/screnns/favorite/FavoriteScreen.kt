@@ -9,12 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,16 +24,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.farshad.moviesAppCompose.data.model.ui.Resource
 import com.farshad.topmovies_compose.R
-import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.topmovies_compose.data.roomDatabase.Entity.FavoriteMovieEntity
 import com.farshad.topmovies_compose.navigation.Screens
 import com.farshad.topmovies_compose.ui.screnns.common.ImageWithGradient
-import com.farshad.topmovies_compose.ui.screnns.common.LoadingAnimation
-import com.farshad.topmovies_compose.ui.screnns.common.MovieThumbnailItem
-import com.farshad.topmovies_compose.ui.theme.AppTheme
-import com.farshad.topmovies_compose.util.DarkAndLightPreview
 
 @Composable
 fun FavoriteScreenWithViewModel(

@@ -4,11 +4,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
-import com.farshad.moviesAppCompose.data.model.ui.Resource
 import com.farshad.topmovies_compose.data.roomDatabase.Entity.FavoriteMovieEntity
 import com.farshad.topmovies_compose.navigation.Screens
 import com.farshad.topmovies_compose.ui.screnns.favorite.FavoriteScreenViewModel
-import com.farshad.topmovies_compose.ui.screnns.movieDetail.model.UiMovieDetailModel
 
 
 class DetailScreenOnClicks(

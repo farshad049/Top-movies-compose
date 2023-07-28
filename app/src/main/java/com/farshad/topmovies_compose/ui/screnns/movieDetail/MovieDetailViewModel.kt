@@ -1,14 +1,25 @@
 package com.farshad.topmovies_compose.ui.screnns.movieDetail
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.farshad.moviesAppCompose.data.model.ui.Resource
 import com.farshad.moviesAppCompose.data.repository.MovieDetailRepository
-import com.farshad.topmovies_compose.data.roomDatabase.Entity.FavoriteMovieEntity
+import com.farshad.topmovies_compose.data.model.domain.DomainMovieModel
 import com.farshad.topmovies_compose.data.repository.RoomRepository
+import com.farshad.topmovies_compose.data.roomDatabase.Entity.FavoriteMovieEntity
 import com.farshad.topmovies_compose.ui.screnns.movieDetail.model.UiMovieDetailModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,14 +29,21 @@ class MovieDetailViewModel @Inject constructor(
     private val roomRepository: RoomRepository
 ) : ViewModel() {
 
-    private val _movieByIdFlow= MutableStateFlow<com.farshad.topmovies_compose.data.model.domain.DomainMovieModel?>(null)
+    private val _movieByIdFlow= MutableStateFlow<DomainMovieModel?>(null)
     val movieByIdFlow = _movieByIdFlow.asStateFlow()
 
-    private val _movieByGenreFlow= MutableStateFlow<List<com.farshad.topmovies_compose.data.model.domain.DomainMovieModel>>(emptyList())
+    private val _movieByGenreFlow= MutableStateFlow<List<DomainMovieModel>>(emptyList())
     val movieByGenreFlow = _movieByGenreFlow.asStateFlow()
 
     private val _favoriteMovieListFlow = MutableStateFlow<List<FavoriteMovieEntity>>(emptyList())
     val favoriteMovieListFlow = _favoriteMovieListFlow.asStateFlow()
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isRefreshing.asStateFlow()
+
+    var movieIdForRefreshPurpose by mutableIntStateOf(0)
+        private set
+
 
 
 
@@ -40,6 +58,7 @@ class MovieDetailViewModel @Inject constructor(
             }
 
             getFavoriteMovieList()
+            movieIdForRefreshPurpose= movieId
         }
     }
 
@@ -84,6 +103,21 @@ class MovieDetailViewModel @Inject constructor(
             initialValue = Resource.Loading
         )
 
+
+    fun refresh(){
+        viewModelScope.launch {
+            _movieByIdFlow.value= null
+            _movieByGenreFlow.value= emptyList()
+            _movieByGenreFlow.value= emptyList()
+
+            getMovieById(movieIdForRefreshPurpose)
+            getFavoriteMovieList()
+
+            if (combinedData.first() is Resource.Success){
+                _isRefreshing.emit(false)
+            }
+        }
+    }
 
 
 

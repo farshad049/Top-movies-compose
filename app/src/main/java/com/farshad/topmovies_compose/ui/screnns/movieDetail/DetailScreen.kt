@@ -16,10 +16,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.PullRefreshState
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -66,6 +71,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DetailScreenWithViewModel(
     navController: NavHostController,
@@ -81,6 +87,9 @@ fun DetailScreenWithViewModel(
 
     val data by detailViewModel.combinedData.collectAsStateWithLifecycle(initialValue = Resource.Loading)
 
+    val isRefreshing by detailViewModel.isRefreshing.collectAsStateWithLifecycle()
+    val pullRefreshState = rememberPullRefreshState(isRefreshing, { detailViewModel.refresh() })
+
     when (data) {
         is Resource.Success -> {
             DetailScreen(
@@ -94,7 +103,9 @@ fun DetailScreenWithViewModel(
                 onShareClick = {movieId ->
                     detailScreenOnClicks.onShareClick(context = context, movieId = movieId)
                 },
-                onSimilarMovieClick = {detailScreenOnClicks.onSimilarMovieClick(it)}
+                onSimilarMovieClick = {detailScreenOnClicks.onSimilarMovieClick(it)},
+                refreshState = pullRefreshState,
+                isRefreshing = isRefreshing
             )
         }
 
@@ -107,18 +118,22 @@ fun DetailScreenWithViewModel(
 
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DetailScreen(
     movieItem: UiMovieDetailModel,
     onFavoriteClick: (FavoriteMovieEntity) -> Unit,
     onShareClick: (Int) -> Unit,
-    onSimilarMovieClick: (Int) -> Unit
+    onSimilarMovieClick: (Int) -> Unit,
+    refreshState: PullRefreshState,
+    isRefreshing: Boolean
 ) {
 
 
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .pullRefresh(refreshState)
             .background(color = MaterialTheme.colorScheme.background)
     ) {
 
@@ -147,9 +162,15 @@ fun DetailScreen(
                 onSimilarMovieClick = onSimilarMovieClick
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(56.dp))
 
         }
+
+        PullRefreshIndicator(
+            modifier = Modifier.align(Alignment.TopCenter),
+            refreshing = isRefreshing,
+            state = refreshState,
+        )
 
     }
 }
@@ -602,6 +623,7 @@ fun SimilarMovies(
 
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @DarkAndLightPreview
 @Composable
 private fun Preview(){
@@ -614,7 +636,9 @@ private fun Preview(){
             ),
             onFavoriteClick = {},
             onShareClick = {},
-            onSimilarMovieClick = {}
+            onSimilarMovieClick = {},
+            refreshState = rememberPullRefreshState(refreshing = false, onRefresh = { /*TODO*/ }),
+            isRefreshing = false
         )
     }
 }

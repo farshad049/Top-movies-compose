@@ -3,12 +3,10 @@ package com.farshad.topmovies_compose.data.dataStore
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.farshad.topmovies_compose.data.dataStore.DataStoreConstants.ENGLISH
-import com.farshad.topmovies_compose.data.model.network.UserAuthModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

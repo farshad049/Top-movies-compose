@@ -11,7 +11,7 @@ data class UploadMovieModel(
     val imdb_votes: String = "",
     val poster: String? = "",
     var title: String = "",
-    var year: Int = 0
+    var year: Int= 0
 )
 
 data class UploadMovieMultipart(

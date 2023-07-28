@@ -1,9 +1,9 @@
 package com.farshad.topmovies_compose.ui.screnns.movieList
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,11 +11,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.FilterAlt
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.PullRefreshState
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.InputChipDefaults
@@ -39,6 +46,7 @@ import com.farshad.topmovies_compose.ui.theme.AppTheme
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MovieListScreenWithViewModel(
     navController: NavHostController,
@@ -52,8 +60,10 @@ fun MovieListScreenWithViewModel(
     val filterForFilterRow by filterViewModel.combinedDataForFilterRowMovieList.collectAsStateWithLifecycle()
 
     val filterForMovieList by filterViewModel.combinedFilterDataForMovieList.collectAsStateWithLifecycle()
+    val isRefreshing by movieListViewModel.isRefreshing.collectAsStateWithLifecycle()
+    val pullRefreshState = rememberPullRefreshState(isRefreshing, { movieListViewModel.refresh() })
 
-    LaunchedEffect(key1 = filterForMovieList ){
+   LaunchedEffect(key1 = filterForMovieList ){
         movieListViewModel.submitQuery(filterForMovieList)
     }
 
@@ -62,22 +72,33 @@ fun MovieListScreenWithViewModel(
         onMovieClick = {movieListOnClicks.onMovieClick(it)},
         filtersForLazyRow = filterForFilterRow,
         onFilterRowItemClick = {movieListOnClicks.onFilterRowItemClick(it)},
-        onFilterIconClick = {movieListOnClicks.onFilterIconClick()}
+        onFilterIconClick = {movieListOnClicks.onFilterIconClick()},
+        refreshState = pullRefreshState,
+        isRefreshing = isRefreshing
     )
 
 }
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MovieListScreen(
     movieList: LazyPagingItems<DomainMovieModel>,
     onMovieClick: (Int)-> Unit,
     filtersForLazyRow: Set<String>,
     onFilterRowItemClick: (String) -> Unit,
-    onFilterIconClick: () -> Unit
+    onFilterIconClick: () -> Unit,
+    refreshState: PullRefreshState,
+    isRefreshing: Boolean
 ){
-    Box(modifier = Modifier.fillMaxSize()){
-        Column(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .pullRefresh(refreshState)
+        .background(color = MaterialTheme.colorScheme.background)
+    ){
+        Column(modifier = Modifier
+            .fillMaxSize()
+        ) {
 
             FilterRow(
                 filters = filtersForLazyRow,
@@ -90,6 +111,12 @@ fun MovieListScreen(
                 onMovieClick = onMovieClick,
             )
         }
+
+        PullRefreshIndicator(
+            modifier = Modifier.align(Alignment.TopCenter),
+            refreshing = isRefreshing,
+            state = refreshState,
+        )
 
     }
 

@@ -2,12 +2,15 @@
 
 package com.farshad.topmovies_compose.ui.screnns.submitMovie
 
+import android.app.Activity
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -35,16 +37,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.farshad.topmovies_compose.R
+import com.farshad.topmovies_compose.data.model.domain.UploadMovieModel
+import com.farshad.topmovies_compose.navigation.Screens
 import com.farshad.topmovies_compose.ui.screnns.common.IntTextField
 import com.farshad.topmovies_compose.ui.screnns.common.MyButton
 import com.farshad.topmovies_compose.ui.screnns.common.MyTextField
 import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.SubmitFieldValidationModel
-import com.farshad.topmovies_compose.data.model.domain.UploadMovieModel
-import com.farshad.topmovies_compose.navigation.Screens
 import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.SubmitResponseModel
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import com.farshad.topmovies_compose.util.Convertors
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
+import com.farshad.topmovies_compose.util.ShowNotification
 
 @Composable
 fun SubmitMovieBase64ScreenWithViewModel(
@@ -52,6 +55,7 @@ fun SubmitMovieBase64ScreenWithViewModel(
     submitBase64ViewModel: SubmitBase64ViewModel= hiltViewModel(),
 ){
     val context= LocalContext.current
+    val activity = LocalContext.current as Activity
 
     val base64Validation by submitBase64ViewModel.validationFlow.collectAsStateWithLifecycle(initialValue = SubmitFieldValidationModel())
 
@@ -75,8 +79,16 @@ fun SubmitMovieBase64ScreenWithViewModel(
 
         is SubmitResponseModel.Success ->{
             LaunchedEffect(key1 = submitBase64Response){
-                val movieId= (submitBase64Response as SubmitResponseModel.Success).data.id
-                navController.navigate(Screens.Detail.passMovieID(movieId = movieId))
+                val movie= (submitBase64Response as SubmitResponseModel.Success).data
+                navController.navigate(Screens.Detail.passMovieID(movieId = movie.id))
+
+                ShowNotification(activity = activity, context = context)
+                    .showNotification(
+                        title = "upload status",
+                        channelDescription = "${movie.title} Uploaded successfully !" ,
+                        navigationActionName = "movieId" ,
+                        movieId = movie.id
+                    )
             }
         }
 
@@ -107,7 +119,7 @@ fun SubmitMovieBase64Screen(
     var movieTitle by rememberSaveable { mutableStateOf("") }
     var imdbId by rememberSaveable { mutableStateOf("") }
     var country by rememberSaveable { mutableStateOf("") }
-    var year by rememberSaveable { mutableStateOf("") }
+    var year by rememberSaveable { mutableStateOf("0") }
     var director by rememberSaveable { mutableStateOf("") }
     var imdbRating by rememberSaveable { mutableStateOf("") }
     var imdbVoting by rememberSaveable { mutableStateOf("") }

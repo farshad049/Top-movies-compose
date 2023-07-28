@@ -1,12 +1,13 @@
 package com.farshad.topmovies_compose.ui.screnns.favorite
 
-import androidx.lifecycle.*
-import com.farshad.moviesAppCompose.data.model.ui.Resource
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.farshad.topmovies_compose.data.repository.FavoriteMovieRepository
 import com.farshad.topmovies_compose.data.repository.RoomRepository
 import com.farshad.topmovies_compose.data.roomDatabase.Entity.FavoriteMovieEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

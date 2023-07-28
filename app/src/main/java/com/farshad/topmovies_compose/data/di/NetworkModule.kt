@@ -3,10 +3,10 @@ package com.farshad.topmovies_compose.data.di
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.farshad.topmovies_compose.data.remote.interceptors.AuthAuthenticator
-import com.farshad.topmovies_compose.data.remote.interceptors.AuthInterceptor
 import com.farshad.topmovies_compose.data.remote.ApiClient
 import com.farshad.topmovies_compose.data.remote.MovieService
+import com.farshad.topmovies_compose.data.remote.interceptors.AuthAuthenticator
+import com.farshad.topmovies_compose.data.remote.interceptors.AuthInterceptor
 import com.farshad.topmovies_compose.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides

@@ -9,6 +9,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.PullRefreshState
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,6 +37,7 @@ import com.farshad.topmovies_compose.util.DarkAndLightPreview
 import com.farshad.topmovies_compose.util.sampleGenreList
 import com.farshad.topmovies_compose.util.sampleMovieList
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DashboardScreenWithViewModel(
     navController: NavHostController,
@@ -41,6 +47,8 @@ fun DashboardScreenWithViewModel(
     val dashboardOnClicks= DashboardOnClicks(navController)
 
     val data by dashboardViewModel.combinedData.collectAsStateWithLifecycle(initialValue = Resource.Loading)
+    val isRefreshing by dashboardViewModel.isRefreshing.collectAsStateWithLifecycle()
+    val pullRefreshState = rememberPullRefreshState(isRefreshing, { dashboardViewModel.refresh() })
 
     when (data) {
         is Resource.Success -> {
@@ -52,7 +60,9 @@ fun DashboardScreenWithViewModel(
                     dashboardOnClicks.onGenreClick()
                 },
                 onViewAllGenreClick = {dashboardOnClicks.onGenreClick()},
-                onViewAllMovieClick = {dashboardOnClicks.onViewAllMovieClick()}
+                onViewAllMovieClick = {dashboardOnClicks.onViewAllMovieClick()},
+                refreshState = pullRefreshState,
+                isRefreshing = isRefreshing
             )
         }
 
@@ -64,26 +74,31 @@ fun DashboardScreenWithViewModel(
 
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DashboardScreen(
     movieAndGenre: DashboardUiModel,
     onImageClick: (Int) -> Unit,
     onGenreClick: (Int) -> Unit,
     onViewAllGenreClick: () -> Unit,
-    onViewAllMovieClick : ()-> Unit
+    onViewAllMovieClick : ()-> Unit,
+    refreshState: PullRefreshState,
+    isRefreshing: Boolean
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .pullRefresh(refreshState)
             .background(color = MaterialTheme.colorScheme.background)
     ) {
+
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
 
             DashboardImageThumbnailRow(
                 modifier = Modifier.height(310.dp),
@@ -123,12 +138,19 @@ fun DashboardScreen(
 
         }
 
+        PullRefreshIndicator(
+            modifier = Modifier.align(Alignment.TopCenter),
+            refreshing = isRefreshing,
+            state = refreshState,
+        )
+
     }
 }
 
 
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @DarkAndLightPreview
 @Composable
 private fun Preview(
@@ -143,7 +165,9 @@ private fun Preview(
             onImageClick = {},
             onGenreClick = {},
             onViewAllGenreClick = {},
-            onViewAllMovieClick = {}
+            onViewAllMovieClick = {},
+            refreshState = rememberPullRefreshState(refreshing = false, onRefresh = { /*TODO*/ }),
+            isRefreshing = false
         )
     }
 }

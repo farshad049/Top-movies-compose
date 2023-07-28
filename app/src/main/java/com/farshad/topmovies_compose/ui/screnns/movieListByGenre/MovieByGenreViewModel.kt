@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import com.farshad.moviesAppCompose.data.model.ui.Resource
+import com.farshad.moviesAppCompose.data.repository.DashboardRepository
 import com.farshad.topmovies_compose.data.model.mapper.MovieMapper
 import com.farshad.topmovies_compose.data.model.network.GenresModel
-import com.farshad.moviesAppCompose.data.model.ui.Resource
-import com.farshad.topmovies_compose.data.remote.ApiClient
-import com.farshad.moviesAppCompose.data.repository.DashboardRepository
 import com.farshad.topmovies_compose.data.paging.MovieByGenreDataSource
+import com.farshad.topmovies_compose.data.remote.ApiClient
 import com.farshad.topmovies_compose.ui.screnns.movieListByGenre.model.UiGenresModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -27,42 +27,42 @@ class MovieByGenreViewModel @Inject constructor(
     private val apiClient: ApiClient,
     private val movieMapper: MovieMapper,
     private val repository: DashboardRepository
-): ViewModel() {
+) : ViewModel() {
 
     init {
         getAllGenres()
     }
 
-    private val _allGenresMovieFlow= MutableStateFlow<List<GenresModel>>(emptyList())
+    private val _allGenresMovieFlow = MutableStateFlow<List<GenresModel>>(emptyList())
     val allGenresMovieFlow = _allGenresMovieFlow.asStateFlow()
 
-    private val _selectedGenreFlow= MutableStateFlow(2)
+    private val _selectedGenreFlow = MutableStateFlow(2)
     val selectedGenreFlow = _selectedGenreFlow.asStateFlow()
 
-    fun getAllGenres(){
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isRefreshing.asStateFlow()
+
+    fun getAllGenres() {
         viewModelScope.launch {
-            val response= repository.getAllGenres()
+            val response = repository.getAllGenres()
             if (response.isNotEmpty()) _allGenresMovieFlow.emit(response)
         }
     }
 
-    fun updateSelectedGenreId(genreId: Int){
+    fun updateSelectedGenreId(genreId: Int) {
         viewModelScope.launch {
-            _selectedGenreFlow.value= genreId
+            _selectedGenreFlow.value = genreId
         }
     }
-
-
-
 
 
     val dataForMovieByGenreScreen: Flow<Resource<UiGenresModel>> =
         combine(
             allGenresMovieFlow,
             selectedGenreFlow
-        ){allGenres, selectedGenreId->
-            val combinedData=
-                if (allGenres.isNotEmpty()){
+        ) { allGenres, selectedGenreId ->
+            val combinedData =
+                if (allGenres.isNotEmpty()) {
                     Resource.Success(
                         UiGenresModel(
                             genreList = allGenres.map {
@@ -73,9 +73,9 @@ class MovieByGenreViewModel @Inject constructor(
                             }
                         )
                     )
-                 }else{
-                     Resource.Loading
-                 }
+                } else {
+                    Resource.Loading
+                }
             return@combine combinedData
         }.stateIn(
             scope = viewModelScope,
@@ -84,16 +84,11 @@ class MovieByGenreViewModel @Inject constructor(
         )
 
 
-
-
-
-
-
-    private var genreId:Int=0
-     var pagingSource: MovieByGenreDataSource? =null
+    private var genreId: Int = 0
+    var pagingSource: MovieByGenreDataSource? = null
         get() {
-            if (field == null || field?.invalid == true){
-                field = MovieByGenreDataSource(apiClient,movieMapper, genreId = genreId)
+            if (field == null || field?.invalid == true) {
+                field = MovieByGenreDataSource(apiClient, movieMapper, genreId = genreId)
             }
             return field
         }
@@ -107,14 +102,22 @@ class MovieByGenreViewModel @Inject constructor(
     ) { pagingSource!! }.flow.cachedIn(viewModelScope)
 
 
-
-    fun submitQuery(genreIdFromFragment:Int){
-        genreId= genreIdFromFragment
+    fun submitQuery(genreIdFromScreen: Int) {
+        genreId = genreIdFromScreen
         pagingSource?.invalidate()
 
         viewModelScope.launch {
-            _selectedGenreFlow.value= genreIdFromFragment
+            _selectedGenreFlow.value = genreIdFromScreen
         }
     }
+
+
+    fun refresh() {
+        viewModelScope.launch {
+            pagingSource?.invalidate()
+            _isRefreshing.emit(false)
+        }
+    }
+
 
 }

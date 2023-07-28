@@ -1,35 +1,21 @@
 package com.farshad.topmovies_compose.navigation
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.farshad.topmovies_compose.navigation.NavigationConstants.SEARCH_SCREEN
@@ -69,7 +55,7 @@ fun MainScreen(navHostController: NavHostController) {
         content = {
 
             val isInternetConnected= connectionLiveData.observeAsState().value
-            if (isInternetConnected == true){
+         //   if (isInternetConnected == true){
                 Scaffold(
                     topBar = {
                         if (showBottomAndTopBar) {
@@ -100,9 +86,9 @@ fun MainScreen(navHostController: NavHostController) {
                         SetupNavGraph(navController = navHostController)
                     }
                 }
-            }else{
-                NoInternetScreen()
-            }
+//            }else{
+//                NoInternetScreen()
+//            }
 
         }
     )
