@@ -2,6 +2,7 @@
 
 package com.farshad.topmovies_compose.ui.screnns.submitMovie
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.net.Uri
@@ -26,6 +27,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -40,6 +42,7 @@ import com.farshad.topmovies_compose.R
 import com.farshad.topmovies_compose.data.model.domain.UploadMovieModel
 import com.farshad.topmovies_compose.navigation.Screens
 import com.farshad.topmovies_compose.ui.screnns.common.IntTextField
+import com.farshad.topmovies_compose.ui.screnns.common.LoadingAnimation
 import com.farshad.topmovies_compose.ui.screnns.common.MyButton
 import com.farshad.topmovies_compose.ui.screnns.common.MyTextField
 import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.SubmitFieldValidationModel
@@ -47,15 +50,19 @@ import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.SubmitResponse
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import com.farshad.topmovies_compose.util.Convertors
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
-import com.farshad.topmovies_compose.util.ShowNotification
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SubmitMovieBase64ScreenWithViewModel(
     navController: NavHostController,
     submitBase64ViewModel: SubmitBase64ViewModel= hiltViewModel(),
 ){
     val context= LocalContext.current
-    val activity = LocalContext.current as Activity
+    val notificationPermissionState = rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
 
     val base64Validation by submitBase64ViewModel.validationFlow.collectAsStateWithLifecycle(initialValue = SubmitFieldValidationModel())
 
@@ -82,13 +89,13 @@ fun SubmitMovieBase64ScreenWithViewModel(
                 val movie= (submitBase64Response as SubmitResponseModel.Success).data
                 navController.navigate(Screens.Detail.passMovieID(movieId = movie.id))
 
-                ShowNotification(activity = activity, context = context)
-                    .showNotification(
-                        title = "upload status",
-                        channelDescription = "${movie.title} Uploaded successfully !" ,
-                        navigationActionName = "movieId" ,
-                        movieId = movie.id
-                    )
+
+                if (!notificationPermissionState.status.isGranted) {
+                    notificationPermissionState.launchPermissionRequest()
+                } else {
+                    NotificationManager(context = context).showSimpleNotification(movieId = movie.id)
+                }
+
             }
         }
 
@@ -98,6 +105,8 @@ fun SubmitMovieBase64ScreenWithViewModel(
             }
 
         }
+
+        else -> { LoadingAnimation()}
     }
 
 }

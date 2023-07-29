@@ -8,7 +8,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.farshad.topmovies_compose.navigation.NavigationConstants.DASHBOARD_GRAPH
+import com.farshad.topmovies_compose.navigation.NavigationConstants.MOVIE_ID
 import com.farshad.topmovies_compose.navigation.NavigationConstants.ROOT_GRAPH
 import com.farshad.topmovies_compose.ui.screnns.favorite.FavoriteScreenWithViewModel
 import com.farshad.topmovies_compose.ui.screnns.filter.FilterViewModel
@@ -67,13 +69,14 @@ fun SetupNavGraph(navController: NavHostController){
             composable(
                 route = Screens.Detail.route,
                 arguments = listOf(
-                    navArgument(NavigationConstants.MOVIE_ID){
+                    navArgument(MOVIE_ID){
                         type= NavType.IntType
                         defaultValue = 0
                     }
-                )
+                ),
+                deepLinks = listOf(navDeepLink { uriPattern = "https://moviesapi.ir/api/v1/movies/{$MOVIE_ID}" })
             ){
-                val arg= it.arguments?.getInt(NavigationConstants.MOVIE_ID)
+                val arg= it.arguments?.getInt(MOVIE_ID)
                 DetailScreenWithViewModel(navController = navController, arg = arg)
             }
 

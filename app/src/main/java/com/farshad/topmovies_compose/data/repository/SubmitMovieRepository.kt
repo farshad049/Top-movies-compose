@@ -17,11 +17,17 @@ class SubmitMovieRepository @Inject constructor(
     suspend fun pushMovieBase64(movie: UploadMovieModel): SubmitResponseModel {
         val response= apiClient.pushMovieBase64(movie)
 
-        return if (!response.isSuccessful){
-            val jsonObj = response.data?.errorBody()?.charStream()?.readText()?.let { JSONObject(it).getString("errors") }
-            SubmitResponseModel.Error(jsonObj ?: "Something went wrong")
-        }else{
-            SubmitResponseModel.Success(response.body)
+        return when{
+            response.isSuccessful ->{
+                SubmitResponseModel.Success(response.body)
+            }
+            !response.isSuccessful -> {
+                val jsonObj = response.data?.errorBody()?.charStream()?.readText()?.let { JSONObject(it).getString("errors") }
+                SubmitResponseModel.Error(jsonObj ?: "Something went wrong")
+            }
+            else -> {
+                SubmitResponseModel.Loading
+            }
         }
 
     }
@@ -43,11 +49,18 @@ class SubmitMovieRepository @Inject constructor(
 
         val response= apiClient.pushMovieMulti(poster,titleBody,imdbIdBody,countryBody,yearBody)
 
-        return if (!response.isSuccessful){
-            val jsonObj = response.data?.errorBody()?.charStream()?.readText()?.let { JSONObject(it).getString("errors") }
-            SubmitResponseModel.Error(jsonObj ?: "Something went wrong")
-        }else{
-            SubmitResponseModel.Success(response.body)
+
+        return when{
+            !response.isSuccessful -> {
+                val jsonObj = response.data?.errorBody()?.charStream()?.readText()?.let { JSONObject(it).getString("errors") }
+                SubmitResponseModel.Error(jsonObj ?: "Something went wrong")
+            }
+            response.isSuccessful -> {
+                SubmitResponseModel.Success(response.body)
+            }
+            else -> {
+                SubmitResponseModel.Loading
+            }
         }
     }
 

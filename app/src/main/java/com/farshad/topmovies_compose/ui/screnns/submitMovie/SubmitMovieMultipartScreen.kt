@@ -1,11 +1,14 @@
 package com.farshad.topmovies_compose.ui.screnns.submitMovie
 
+import android.Manifest
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,14 +38,20 @@ import com.farshad.topmovies_compose.R
 import com.farshad.topmovies_compose.data.model.domain.UploadMovieMultipart
 import com.farshad.topmovies_compose.navigation.Screens
 import com.farshad.topmovies_compose.ui.screnns.common.IntTextField
+import com.farshad.topmovies_compose.ui.screnns.common.LoadingAnimation
 import com.farshad.topmovies_compose.ui.screnns.common.MyButton
 import com.farshad.topmovies_compose.ui.screnns.common.MyTextField
 import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.SubmitFieldValidationModel
 import com.farshad.topmovies_compose.ui.screnns.submitMovie.model.SubmitResponseModel
 import com.farshad.topmovies_compose.util.Convertors
 import com.farshad.topmovies_compose.util.RealPathUtil
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import okhttp3.MultipartBody
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SubmitMovieMultipartWithViewModel(
     navController: NavHostController,
@@ -54,6 +63,10 @@ fun SubmitMovieMultipartWithViewModel(
 
     val submitMultipartResponse by submitMultipartViewModel.submitMovieMultipartFlow.collectAsStateWithLifecycle(initialValue = SubmitResponseModel.Loading)
 
+    val notificationPermissionState = rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+    var imageUri: Uri? by remember{ mutableStateOf(null) }
+
+
     SubmitMovieMultipart(
         error = multipartValidation,
         onSubmitButtonClick = {
@@ -64,15 +77,25 @@ fun SubmitMovieMultipartWithViewModel(
                 year = it.year.toString(),
                 poster = it.poster
             )
-        }
+        },
+        imageUirForNotification = {imageUri= it}
     )
+
+
+
 
     when(submitMultipartResponse){
 
         is SubmitResponseModel.Success ->{
             LaunchedEffect(key1 = submitMultipartResponse){
-                val movieId= (submitMultipartResponse as SubmitResponseModel.Success).data.id
-                navController.navigate(Screens.Detail.passMovieID(movieId = movieId))
+                val movie= (submitMultipartResponse as SubmitResponseModel.Success).data
+                navController.navigate(Screens.Detail.passMovieID(movieId = movie.id))
+
+                if (!notificationPermissionState.status.isGranted) {
+                    notificationPermissionState.launchPermissionRequest()
+                } else {
+                    NotificationManager(context = context).showImageNotification(movieId = movie.id, uri = imageUri)
+                }
             }
         }
 
@@ -82,7 +105,13 @@ fun SubmitMovieMultipartWithViewModel(
             }
 
         }
+
+        else -> { LoadingAnimation()}
     }
+
+
+
+
 }
 
 
@@ -93,6 +122,7 @@ fun SubmitMovieMultipartWithViewModel(
 fun SubmitMovieMultipart(
     error: SubmitFieldValidationModel,
     onSubmitButtonClick: (UploadMovieMultipart) -> Unit,
+    imageUirForNotification: (Uri?) -> Unit
 ) {
 
     val context= LocalContext.current
@@ -105,7 +135,7 @@ fun SubmitMovieMultipart(
     var movieTitle by rememberSaveable { mutableStateOf("") }
     var imdbId by rememberSaveable { mutableStateOf("") }
     var country by rememberSaveable { mutableStateOf("") }
-    var year by rememberSaveable { mutableStateOf("") }
+    var year by rememberSaveable { mutableStateOf("0") }
     var director by rememberSaveable { mutableStateOf("") }
     var imdbRating by rememberSaveable { mutableStateOf("") }
     var imdbVoting by rememberSaveable { mutableStateOf("") }
@@ -198,6 +228,8 @@ fun SubmitMovieMultipart(
                             poster = convertUriToRequestBody(context = context, uri = imageUri )
                         )
                     )
+
+                    imageUirForNotification(imageUri)
                 }
             )
 

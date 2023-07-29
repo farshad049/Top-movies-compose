@@ -140,7 +140,10 @@ dependencies {
     implementation 'androidx.compose.runtime:runtime-livedata:1.6.0-alpha01'
 
     //swipe to refresh
-    implementation "androidx.compose.material:material:1.6.0-alpha01"
+    implementation "androidx.compose.material:material:1.6.0-alpha02"
+
+    //permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
 
 
 

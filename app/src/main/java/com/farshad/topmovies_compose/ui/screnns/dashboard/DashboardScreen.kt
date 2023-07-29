@@ -135,6 +135,8 @@ fun DashboardScreen(
                 onClick = onImageClick
             )
 
+            Spacer(modifier = Modifier.height(56.dp))
+
 
         }
 
