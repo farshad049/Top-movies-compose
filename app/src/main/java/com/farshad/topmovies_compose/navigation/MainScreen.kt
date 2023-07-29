@@ -9,7 +9,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -20,6 +19,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.farshad.topmovies_compose.navigation.NavigationConstants.SEARCH_SCREEN
 import com.farshad.topmovies_compose.util.CheckInternetConnection
+import com.farshad.topmovies_compose.util.ConnectionState
+import com.farshad.topmovies_compose.util.connectivityState
 import kotlinx.coroutines.launch
 
 
@@ -27,7 +28,7 @@ import kotlinx.coroutines.launch
 fun MainScreen(navHostController: NavHostController) {
 
     val context= LocalContext.current
-    var connectionLiveData= CheckInternetConnection(context)
+    //var connectionLiveData= CheckInternetConnection(context)
 
     var showBottomAndTopBar by rememberSaveable { mutableStateOf(true) }
     val navBackStackEntry by navHostController.currentBackStackEntryAsState()
@@ -54,41 +55,42 @@ fun MainScreen(navHostController: NavHostController) {
         },
         content = {
 
-            val isInternetConnected= connectionLiveData.observeAsState().value
-         //   if (isInternetConnected == true){
-                Scaffold(
-                    topBar = {
-                        if (showBottomAndTopBar) {
-                            MyTopBar(
-                                onTopBarClick = { navHostController.navigate(Screens.Search.route) },
-                                onDrawerClick = {
-                                    scope.launch {
-                                        drawerState.open()
-                                    }
+            val connection by connectivityState(context = context)
+            val isConnected = connection === ConnectionState.Available
+            //val isInternetConnected= connectionLiveData.observeAsState().value
+
+            Scaffold(
+                topBar = {
+                    if (showBottomAndTopBar) {
+                        MyTopBar(
+                            onTopBarClick = { navHostController.navigate(Screens.Search.route) },
+                            onDrawerClick = {
+                                scope.launch {
+                                    drawerState.open()
                                 }
-                            )
-                        }
-                    },
-                    bottomBar = {
-                        if (showBottomAndTopBar) {
-                            BottomBar(navHostController = navHostController)
-                        }
-                    },
-                ) { innerPadding ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(
-                                top = innerPadding.calculateTopPadding(),
-                                bottom = innerPadding.calculateBottomPadding()
-                            )
-                    ) {
-                        SetupNavGraph(navController = navHostController)
+                            },
+                            isInternetConnected = isConnected
+                        )
                     }
+                },
+                bottomBar = {
+                    if (showBottomAndTopBar) {
+                        BottomBar(navHostController = navHostController)
+                    }
+                },
+            ) { innerPadding ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            top = innerPadding.calculateTopPadding(),
+                            bottom = innerPadding.calculateBottomPadding()
+                        )
+                ) {
+                    SetupNavGraph(navController = navHostController)
                 }
-//            }else{
-//                NoInternetScreen()
-//            }
+            }
+
 
         }
     )

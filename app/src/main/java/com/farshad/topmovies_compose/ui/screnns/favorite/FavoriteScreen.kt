@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -77,6 +78,7 @@ fun FavoriteScreen(
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 columns = GridCells.Adaptive(130.dp),
                 state = listState
             ) {
@@ -118,6 +120,7 @@ fun MovieThumbnailGridItem(
         )
 
         Text(
+            textAlign = TextAlign.Center,
             modifier = Modifier.width(130.dp),
             text = movie.title,
             maxLines = 1,

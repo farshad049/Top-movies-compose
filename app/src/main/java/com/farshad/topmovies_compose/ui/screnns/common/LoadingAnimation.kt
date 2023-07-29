@@ -66,8 +66,8 @@ fun LoadingAnimation(
         val distance = with(LocalDensity.current) { travelDistance.toPx() }
 
         Box(
-            modifier = modifier,
-            contentAlignment = Alignment.Center) {
+            contentAlignment = Alignment.Center
+        ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(spaceBetween)
             ) {

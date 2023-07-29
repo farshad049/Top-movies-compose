@@ -3,7 +3,6 @@
 package com.farshad.topmovies_compose.ui.screnns.submitMovie
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.os.Build
@@ -27,7 +26,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment

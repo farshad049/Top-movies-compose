@@ -11,10 +11,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.farshad.moviesAppCompose.data.model.ui.Resource
 import com.farshad.topmovies_compose.data.dataStore.DataStoreViewModel
 import com.farshad.topmovies_compose.navigation.MainScreen
-import com.farshad.topmovies_compose.ui.screnns.dashboard.DashboardViewModel
 import com.farshad.topmovies_compose.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -27,20 +25,13 @@ class MainActivity : ComponentActivity() {
     lateinit var navHostController: NavHostController
 
     private val dataStoreViewModel: DataStoreViewModel by viewModels()
-    private val dashboardViewModel: DashboardViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
-        installSplashScreen().apply {
-            setKeepOnScreenCondition {
-                dashboardViewModel.firstPageMovieFlow.value is Resource.Loading ||
-                        dashboardViewModel.allGenresMovieFlow.value is Resource.Loading
-            }
-        }
-
+        installSplashScreen()
 
 
         lifecycleScope.launch {
