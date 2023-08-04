@@ -57,7 +57,7 @@ import com.farshad.topmovies_compose.R
 import com.farshad.topmovies_compose.data.model.mapper.MovieEntityMapper
 import com.farshad.topmovies_compose.data.roomDatabase.Entity.FavoriteMovieEntity
 import com.farshad.topmovies_compose.ui.screnns.common.ImageThumbnailRow
-import com.farshad.topmovies_compose.ui.screnns.common.LoadingAnimation
+import com.farshad.topmovies_compose.ui.screnns.common.LoadingWithTryAgain
 import com.farshad.topmovies_compose.ui.screnns.favorite.FavoriteScreenViewModel
 import com.farshad.topmovies_compose.ui.screnns.movieDetail.model.UiMovieDetailModel
 import com.farshad.topmovies_compose.ui.theme.AppTheme
@@ -110,7 +110,9 @@ fun DetailScreenWithViewModel(
         }
 
         is Resource.Loading -> {
-            LoadingAnimation()
+            LoadingWithTryAgain {
+                detailViewModel.refresh()
+            }
         }
 
         else -> {}

@@ -42,10 +42,17 @@ fun MyTopBar(
     onTopBarClick: () -> Unit,
     onDrawerClick: () -> Unit,
     isInternetConnected: Boolean
-){
+) {
     val shape = RoundedCornerShape(35.dp)
 
-    val backgroundColor= Brush.verticalGradient(
+    val noInternetBackGroundColor = Brush.verticalGradient(
+        colors = listOf(
+            MaterialTheme.colorScheme.onBackground,
+            Color.Gray.copy(alpha = 0.5f),
+        )
+    )
+
+    val backgroundColor = Brush.verticalGradient(
         colors = listOf(
             Color.Transparent,
             Color.Gray.copy(alpha = 0.1f),
@@ -57,7 +64,7 @@ fun MyTopBar(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        if (!isInternetConnected){
+        if (!isInternetConnected) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -65,7 +72,7 @@ fun MyTopBar(
                         shape = RoundedCornerShape(
                             topStart = 0.dp, topEnd = 0.dp, bottomStart = 35.dp, bottomEnd = 35.dp
                         ),
-                        color = MaterialTheme.colorScheme.onBackground
+                        brush = noInternetBackGroundColor
                     ),
                 text = stringResource(id = R.string.no_internet_connection),
                 color = myRed,
@@ -78,10 +85,10 @@ fun MyTopBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
-                modifier= Modifier
+                modifier = Modifier
                     .size(40.dp)
                     .padding(4.dp),
-                onClick = { onDrawerClick()}
+                onClick = { onDrawerClick() }
             ) {
                 Icon(
                     modifier = Modifier.fillMaxSize(),
@@ -115,14 +122,13 @@ fun MyTopBar(
                 Row(
                     modifier = Modifier
                         .padding(start = 8.dp)
-                        .fillMaxSize()
-                    ,
+                        .fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Search,
-                        contentDescription ="",
+                        contentDescription = "",
                         tint = MaterialTheme.colorScheme.onBackground
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -140,11 +146,9 @@ fun MyTopBar(
 }
 
 
-
-
 @DarkAndLightPreview
 @Composable
-private fun Preview(){
+private fun Preview() {
     AppTheme() {
         MyTopBar(
             onTopBarClick = {},

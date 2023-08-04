@@ -72,7 +72,8 @@ fun MovieListScreenWithViewModel(
         onFilterRowItemClick = {movieListOnClicks.onFilterRowItemClick(it)},
         onFilterIconClick = {movieListOnClicks.onFilterIconClick()},
         refreshState = pullRefreshState,
-        isRefreshing = isRefreshing
+        isRefreshing = isRefreshing,
+        onTryAgainClick = {movieListViewModel.refresh()}
     )
 
 }
@@ -87,7 +88,8 @@ fun MovieListScreen(
     onFilterRowItemClick: (String) -> Unit,
     onFilterIconClick: () -> Unit,
     refreshState: PullRefreshState,
-    isRefreshing: Boolean
+    isRefreshing: Boolean,
+    onTryAgainClick: () -> Unit
 ){
     Box(modifier = Modifier
         .fillMaxSize()
@@ -107,6 +109,7 @@ fun MovieListScreen(
             MovieHorizontalLazyColumn(
                 movieList = movieList,
                 onMovieClick = onMovieClick,
+                onTryAgainClick = onTryAgainClick
             )
         }
 

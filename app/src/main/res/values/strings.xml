@@ -86,6 +86,8 @@
     <string name="please_enter_a_valid_imdb_id">please enter a valid IMDB Id</string>
     <string name="please_enter_a_valid_country_name">please enter a valid country name</string>
     <string name="please_enter_a_valid_year">please enter a valid year</string>
+    <string name="try_again">try again</string>
+    <string name="connection_failed">connection failed</string>
 
 
 

@@ -65,7 +65,8 @@ class RegisterViewModel @Inject constructor(
                         RegisterFieldValidationModel(
                             userName = null,
                             email = null,
-                            password = null
+                            password = null,
+                            isButtonLoading = true
                         )
                     )
 

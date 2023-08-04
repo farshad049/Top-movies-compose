@@ -63,6 +63,7 @@ class LoginViewModel @Inject constructor(
                         LoginFieldValidationModel(
                             email = null,
                             password = null,
+                            buttonLoading = true
                         )
                     )
 

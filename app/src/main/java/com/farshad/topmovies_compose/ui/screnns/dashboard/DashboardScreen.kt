@@ -29,7 +29,7 @@ import com.farshad.topmovies_compose.R
 import com.farshad.topmovies_compose.navigation.SharedViewModel
 import com.farshad.topmovies_compose.ui.screnns.common.HeaderWithViewAll
 import com.farshad.topmovies_compose.ui.screnns.common.ImageThumbnailRow
-import com.farshad.topmovies_compose.ui.screnns.common.LoadingAnimation
+import com.farshad.topmovies_compose.ui.screnns.common.LoadingWithTryAgain
 import com.farshad.topmovies_compose.ui.screnns.common.SuggestionChipLazyRow
 import com.farshad.topmovies_compose.ui.screnns.dashboard.model.DashboardUiModel
 import com.farshad.topmovies_compose.ui.theme.AppTheme
@@ -67,7 +67,11 @@ fun DashboardScreenWithViewModel(
         }
 
         is Resource.Loading -> {
-            LoadingAnimation()
+            LoadingWithTryAgain(
+                onTryAgainClick = {
+                    dashboardViewModel.refresh()
+                }
+            )
         }
         else -> {}
     }
@@ -99,6 +103,8 @@ fun DashboardScreen(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            Spacer(modifier = Modifier.height(4.dp))
 
             DashboardImageThumbnailRow(
                 modifier = Modifier.height(310.dp),

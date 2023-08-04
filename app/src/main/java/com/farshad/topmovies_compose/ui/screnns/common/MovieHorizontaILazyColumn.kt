@@ -26,9 +26,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,6 +55,7 @@ import com.farshad.topmovies_compose.util.Convertors
 import com.farshad.topmovies_compose.util.DarkAndLightPreview
 import com.farshad.topmovies_compose.util.sampleMovie1
 import com.valentinilk.shimmer.shimmer
+import kotlinx.coroutines.delay
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -61,13 +64,16 @@ fun MovieHorizontalLazyColumn(
     modifier: Modifier= Modifier,
     movieList: LazyPagingItems<DomainMovieModel>,
     onMovieClick: (Int)-> Unit,
+    onTryAgainClick: () -> Unit
 ){
     val listState= rememberLazyListState()
     val listForRow by remember { mutableStateOf(movieList) }
 
 
     if (listForRow.loadState.refresh is LoadState.Loading){
-        MovieHorizontalItemShimmerList()
+        MovieHorizontalItemShimmerList(
+            onTryAgainClick = onTryAgainClick
+        )
     }
 
 
@@ -198,16 +204,32 @@ fun MovieHorizontalItem(
 }
 
 
-@DarkAndLightPreview
+
 @Composable
 fun MovieHorizontalItemShimmerList(
-    modifier: Modifier= Modifier
+    modifier: Modifier= Modifier,
+    onTryAgainClick: () -> Unit
 ){
-    Column() {
-        repeat(8){
-            MovieHorizontalItemShimmer(modifier = modifier)
-        }
+
+    var show by remember { mutableStateOf(true) }
+
+    LaunchedEffect(key1 = Unit) {
+        delay(4000)
+        show = false
     }
+
+    if (show){
+        Column() {
+            repeat(8){
+                MovieHorizontalItemShimmer(modifier = modifier)
+            }
+        }
+    }else{
+        TryAgain(
+            onTryAgainClick= onTryAgainClick
+        )
+    }
+
 }
 
 @Composable

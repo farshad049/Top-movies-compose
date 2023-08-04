@@ -18,7 +18,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.farshad.topmovies_compose.navigation.NavigationConstants.SEARCH_SCREEN
-import com.farshad.topmovies_compose.util.CheckInternetConnection
 import com.farshad.topmovies_compose.util.ConnectionState
 import com.farshad.topmovies_compose.util.connectivityState
 import kotlinx.coroutines.launch

@@ -25,7 +25,7 @@ class ProfileViewModel @Inject constructor(
 
 
 
-    private fun getUserInfo(){
+     fun getUserInfo(){
         viewModelScope.launch {
             val response= repository.getUserInfo()
             if (response != null) _userInfoFlow.emit(response)

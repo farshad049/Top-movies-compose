@@ -1,6 +1,5 @@
 package com.farshad.topmovies_compose.ui.screnns.login
 
-import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -28,8 +27,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.farshad.topmovies_compose.MainActivity
 import com.farshad.topmovies_compose.R
+import com.farshad.topmovies_compose.navigation.Screens
 import com.farshad.topmovies_compose.ui.screnns.common.LottieHeader
 import com.farshad.topmovies_compose.ui.screnns.common.MyButton
 import com.farshad.topmovies_compose.ui.screnns.common.MyTextField
@@ -67,8 +66,14 @@ fun LoginScreenWithViewModel(
 
     when (loginResponse) {
         is LoginResponseModel.Success -> {
-            Toast.makeText(context, stringResource(id = R.string.you_are_logged_in), Toast.LENGTH_SHORT).show()
-            LocalContext.current.startActivity(Intent(LocalContext.current, MainActivity::class.java))
+            LaunchedEffect(key1 = loginResponse){
+                navController.navigate(route = Screens.Dashboard.route){
+                    popUpTo(route = Screens.Dashboard.route){
+                        inclusive= true
+                    }
+                }
+            }
+
         }
 
         is LoginResponseModel.Error -> {
@@ -91,6 +96,7 @@ fun LoginScreen(
 
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+
 
 
     Box(
@@ -136,6 +142,7 @@ fun LoginScreen(
             MyButton(
                 modifier = Modifier.fillMaxWidth(fraction = 0.6f),
                 label = stringResource(id = R.string.login),
+                isButtonLoading= error.buttonLoading,
                 onClick = { onButtonClick(email, password) }
             )
 
@@ -155,7 +162,7 @@ private fun Preview() {
     AppTheme {
         LoginScreen(
             error = LoginFieldValidationModel(),
-            onButtonClick = { a, b -> },
+            onButtonClick = { a, b -> }
         )
     }
 }

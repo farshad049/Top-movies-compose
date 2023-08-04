@@ -69,7 +69,8 @@ fun MovieByGenreScreenWithViewModel(
                 },
                 onMovieClick = {movieByGenreOnClicks.onMovieClick(it)},
                 refreshState = pullRefreshState,
-                isRefreshing = isRefreshing
+                isRefreshing = isRefreshing,
+                onTryAgainClick = {movieByGenreViewModel.refresh()}
             )
         }
 
@@ -91,7 +92,8 @@ fun MovieByGenreScreen(
     onGenreClick: (Int) -> Unit,
     onMovieClick: (Int) -> Unit,
     refreshState: PullRefreshState,
-    isRefreshing: Boolean
+    isRefreshing: Boolean,
+    onTryAgainClick: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -113,7 +115,8 @@ fun MovieByGenreScreen(
             MovieHorizontalLazyColumn(
                 modifier.padding(horizontal = 8.dp),
                 movieList = movieList,
-                onMovieClick = onMovieClick
+                onMovieClick = onMovieClick,
+                onTryAgainClick = onTryAgainClick
             )
 
         }

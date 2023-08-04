@@ -1,6 +1,5 @@
 package com.farshad.topmovies_compose.ui.screnns.profile
 
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -25,17 +24,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.farshad.topmovies_compose.MainActivity
 import com.farshad.topmovies_compose.R
 import com.farshad.topmovies_compose.data.dataStore.DataStoreViewModel
 import com.farshad.topmovies_compose.data.model.network.UserRegisteredModel
-import com.farshad.topmovies_compose.ui.screnns.common.LoadingAnimation
+import com.farshad.topmovies_compose.navigation.NavigationConstants.ROOT_GRAPH
+import com.farshad.topmovies_compose.ui.screnns.common.LoadingWithTryAgain
 import com.farshad.topmovies_compose.ui.screnns.common.LottieHeader
 import com.farshad.topmovies_compose.ui.screnns.common.MyButton
 import com.farshad.topmovies_compose.ui.theme.AppTheme
@@ -48,7 +46,6 @@ fun ProfileScreenWithViewModel(
     dataStoreViewModel: DataStoreViewModel = hiltViewModel()
 ) {
 
-    val context= LocalContext.current
 
     val userInfo by profileViewModel.userInfoFlow.collectAsState()
 
@@ -56,12 +53,18 @@ fun ProfileScreenWithViewModel(
         ProfileScreen(
             onLogOutClick = {
                 dataStoreViewModel.deleteToken()
-                context.startActivity(Intent(context, MainActivity::class.java))
+                navController.navigate(route = ROOT_GRAPH){
+                    popUpTo(route = ROOT_GRAPH){
+                        inclusive= true
+                    }
+                }
             },
             userInfo = userInfo!!
         )
     } else {
-        LoadingAnimation()
+        LoadingWithTryAgain {
+            profileViewModel.getUserInfo()
+        }
     }
 
 }

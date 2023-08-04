@@ -39,14 +39,14 @@ fun BottomBar(
     val isLoggedIn by dataStoreViewModel.isLoggedIn.collectAsState(initial = false)
 
     val pages: Set<Screens> =
-        if (isLoggedIn){
+        if (isLoggedIn) {
             setOf(
                 Screens.Dashboard,
                 Screens.MovieList,
                 Screens.Submit,
                 Screens.Favorite
             )
-        }else{
+        } else {
             setOf(
                 Screens.Dashboard,
                 Screens.MovieList,
@@ -83,7 +83,7 @@ fun RowScope.AddItem(
                 contentDescription = "navigation icon"
             )
         },
-        selectedContentColor= MaterialTheme.colorScheme.onBackground,
+        selectedContentColor = MaterialTheme.colorScheme.onBackground,
         selected = currentDestination?.hierarchy?.any() {
             it.route == screen.route
         } == true,
@@ -104,22 +104,22 @@ fun MyBottomNavigation(
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit
 ) {
-    val backGroundColor= Brush.verticalGradient(
+    val backGroundColor = Brush.verticalGradient(
         colors = listOf(
             Color.Transparent,
-            Color.Gray.copy(alpha = 0.5f) ,
+            Color.Gray.copy(alpha = 0.5f),
 
             )
     )
 
-    val borderColor= Brush.verticalGradient(
+    val borderColor = Brush.verticalGradient(
         colors = listOf(
-            MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f) ,
+            MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f),
             MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f)
         )
     )
 
-    val shape= RoundedCornerShape(
+    val shape = RoundedCornerShape(
         topStart = 25.dp,
         topEnd = 25.dp,
         bottomStart = 0.dp,

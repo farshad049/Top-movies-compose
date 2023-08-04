@@ -41,6 +41,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.farshad.topmovies_compose.R
 import com.farshad.topmovies_compose.data.dataStore.DataStoreViewModel
+import com.farshad.topmovies_compose.navigation.NavigationConstants.ROOT_GRAPH
 import com.farshad.topmovies_compose.ui.screnns.common.LottieHeader
 import com.farshad.topmovies_compose.ui.screnns.profile.ProfileViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -58,7 +59,7 @@ fun Drawer(
     drawerState: DrawerState,
     navHostController: NavHostController,
     dataStoreViewModel: DataStoreViewModel = hiltViewModel(),
-    profileViewModel: ProfileViewModel = hiltViewModel()
+    profileViewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val isLoggedIn by dataStoreViewModel.isLoggedIn.collectAsState(initial = false)
 
@@ -131,6 +132,11 @@ fun Drawer(
                     onClick = {
                         scope.launch { drawerState.close() }
                         dataStoreViewModel.deleteToken()
+                        navHostController.navigate(route = ROOT_GRAPH){
+                            popUpTo(route = ROOT_GRAPH){
+                                inclusive= true
+                            }
+                        }
                     },
                     modifier = Modifier
                         .padding(NavigationDrawerItemDefaults.ItemPadding)

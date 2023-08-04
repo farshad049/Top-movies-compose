@@ -28,6 +28,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -50,6 +51,7 @@ fun RegisterScreenWithViewModel(
 ) {
 
     val context = LocalContext.current
+
 
     val validation by registerViewModel.validationFlow.collectAsStateWithLifecycle(initialValue = RegisterFieldValidationModel())
 
@@ -80,7 +82,6 @@ fun RegisterScreenWithViewModel(
             LaunchedEffect(key1 = registerResponse){
                 Toast.makeText(context, (registerResponse as RegisterResponseModel.Error).error, Toast.LENGTH_SHORT).show()
             }
-
         }
     }
 
@@ -156,7 +157,8 @@ fun RegisterScreen(
             MyButton(
                 modifier = Modifier.fillMaxWidth(fraction = 0.6f),
                 label = stringResource(id = R.string.register),
-                onClick = {onButtonClick(userName,email,password)}
+                isButtonLoading = error.isButtonLoading,
+                onClick = { onButtonClick(userName,email,password) }
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -174,7 +176,8 @@ fun RegisterScreen(
                         .clickable { onLogonTxtClick() },
                     text = stringResource(id = R.string.login),
                     color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    textDecoration = TextDecoration.Underline
                 )
             }
 

@@ -87,5 +87,7 @@
     <string name="please_enter_a_valid_imdb_id">شناسه IMDB  وارد کنید</string>
     <string name="please_enter_a_valid_country_name">نام کشور را وارد کنید</string>
     <string name="please_enter_a_valid_year">سال را وارد کنید</string>
+    <string name="try_again">تلاش مجدد</string>
+    <string name="connection_failed">ارتباط برقرار نشد</string>
 
 </resources>
