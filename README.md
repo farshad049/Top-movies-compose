@@ -1,4 +1,4 @@
-This application is basically the same moviesApp that has been upgraded from XML to compose, <br />
+This application is basically the same <a href="https://github.com/farshad049/myMovies">Movies app!</a> that has been upgraded from XML to compose, <br />
 besides it has been built based on material 3 standards and also the compose navigation.< br />
 with a simple comparison, you can notice the advantages of new manners and apply the same functionalities to your own project. <br />
 
