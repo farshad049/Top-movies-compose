@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -61,28 +62,44 @@ fun Drawer(
     dataStoreViewModel: DataStoreViewModel = hiltViewModel(),
     profileViewModel: ProfileViewModel = hiltViewModel(),
 ) {
-    val isLoggedIn by dataStoreViewModel.isLoggedIn.collectAsState(initial = false)
+    val isLoggedIn by dataStoreViewModel.isLoggedIn.collectAsStateWithLifecycle(initialValue = false)
 
-    val useName by profileViewModel.userInfoFlow.collectAsState()
+    val useName by profileViewModel.userInfoFlow.collectAsStateWithLifecycle()
 
-    val items = listOf(
-        DrawerItem(
-            icon = Icons.Rounded.Favorite,
-            title = stringResource(id = R.string.favorite_movies),
-            route = Screens.Favorite.route
-        ),
-        DrawerItem(
-            icon = Icons.Default.Settings,
-            title = stringResource(id = R.string.setting),
-            route = Screens.Setting.route
-        ),
-        DrawerItem(
-            icon = Icons.Default.Person,
-            title = stringResource(id = R.string.profile),
-            route = Screens.Profile.route
-        )
+    val items =
+        if (isLoggedIn){
+            listOf(
+                DrawerItem(
+                    icon = Icons.Rounded.Favorite,
+                    title = stringResource(id = R.string.favorite_movies),
+                    route = Screens.Favorite.route
+                ),
+                DrawerItem(
+                    icon = Icons.Default.Settings,
+                    title = stringResource(id = R.string.setting),
+                    route = Screens.Setting.route
+                ),
+                DrawerItem(
+                    icon = Icons.Default.Person,
+                    title = stringResource(id = R.string.profile),
+                    route = Screens.Profile.route
+                )
+            )
+        }else{
+            listOf(
+                DrawerItem(
+                    icon = Icons.Rounded.Favorite,
+                    title = stringResource(id = R.string.favorite_movies),
+                    route = Screens.Favorite.route
+                ),
+                DrawerItem(
+                    icon = Icons.Default.Settings,
+                    title = stringResource(id = R.string.setting),
+                    route = Screens.Setting.route
+                )
+            )
+        }
 
-    )
 
     var selectedItem by remember { mutableStateOf(items[0]) }
 
@@ -97,7 +114,7 @@ fun Drawer(
                     lottieCompositionSpec = LottieCompositionSpec.RawRes(R.raw.movieanimation)
                 )
 
-                if (isLoggedIn) {
+                if (isLoggedIn && useName!= null) {
                     Spacer(Modifier.height(12.dp))
                     NavigationDrawerItem(
                         icon = {},
@@ -154,40 +171,7 @@ fun Drawer(
 }
 
 
-@Composable
-fun DrawerLottieHeader(
-    lottieCompositionSpec: LottieCompositionSpec,
-) {
-    val composition by rememberLottieComposition(spec = lottieCompositionSpec)
-    var isPlaying by remember { mutableStateOf(true) }
-    val progress by animateLottieCompositionAsState(
-        composition = composition,
-        isPlaying = isPlaying
-    )
 
-    LaunchedEffect(key1 = progress) {
-        if (progress == 0f) isPlaying = true
-        if (progress == 1f) isPlaying = false
-    }
-
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(230.dp)
-            .clickable { isPlaying = true },
-        contentAlignment = Alignment.Center
-    ) {
-
-        LottieAnimation(
-            modifier = Modifier.size(230.dp),
-            composition = composition,
-            progress = { progress }
-        )
-
-
-    }
-}
 
 
 
