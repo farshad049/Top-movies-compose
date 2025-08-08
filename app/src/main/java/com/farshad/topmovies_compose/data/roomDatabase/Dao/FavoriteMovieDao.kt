@@ -10,16 +10,15 @@ interface FavoriteMovieDao {
     @Query("SELECT * FROM favorite_movie")
     fun getAllItemEntities(): Flow<List<FavoriteMovieEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE  )
-    suspend fun insert(itemEntity: FavoriteMovieEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(itemEntity: FavoriteMovieEntity): Unit
 
     @Delete
-    suspend fun delete(itemEntity: FavoriteMovieEntity)
+    suspend fun delete(itemEntity: FavoriteMovieEntity): Int
 
     @Update
-    suspend fun update(itemEntity: FavoriteMovieEntity)
+    suspend fun update(itemEntity: FavoriteMovieEntity): Int
 
     @Query("DELETE FROM favorite_movie")
-    suspend fun deleteAll()
-
+    suspend fun deleteAll(): Int
 }
